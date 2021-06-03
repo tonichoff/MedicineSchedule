@@ -1,13 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:MedicineSchedule.Models"
+             xmlns:local="clr-namespace:MedicineSchedule.ViewModels" x:DataType="local:CoursesListViewModel"
              x:Class="MedicineSchedule.Pages.CoursesPage"
              Title="Курсы лекарств">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Courses!"
-                   VerticalOptions="CenterAndExpand" 
-                   HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+    <StackLayout>
+        <RefreshView x:DataType="local:CoursesListViewModel" Command="{Binding LoadCoursesCommand}" IsRefreshing="{Binding IsUpdating, Mode=TwoWay}">
+            <CollectionView x:Name="CoursesListView"
+                    ItemsSource="{Binding Courses}"
+                    SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10" x:DataType="model:Course">
+                            <Label Text="{Binding MedicineName}" 
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="16" />
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    NumberOfTapsRequired="1"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:CoursesListViewModel}}, Path=ShowCourseDetailsCommand}"		
+                                    CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <Button Text="Создать" Command="{Binding CreateCourseCommand}" />
+    </StackLayout>
 </ContentPage>
