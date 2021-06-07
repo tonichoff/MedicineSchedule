@@ -76,7 +76,6 @@
                             <Picker.Items>
                                 <x:String>Каждый день</x:String>
                                 <x:String>С перерывом</x:String>
-                                <x:String>В конкретные дни</x:String>
                             </Picker.Items>
                         </Picker>
                         <Entry x:Name="IntervalEntry" Text="{Binding DaysInterval}" Placeholder="Сколько длится перерыв в днях"

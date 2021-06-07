@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MedicineSchedule.Models
 {
@@ -71,7 +69,7 @@ namespace MedicineSchedule.Models
 		public DaysMode DaysMode { get; set; }
 		public int ReceptionsInDayCount { get; set; }
 		public int DaysInterval { get; set; }
-		public DaysOfWeek DaysOfWeek { get; set; }
+		//public DaysOfWeek DaysOfWeek { get; set; }
 		public int DaysCount { get; set; }
 		public int ReceptionsCount { get; set; }
 		public FoodRelation FoodRelation { get; set; }
