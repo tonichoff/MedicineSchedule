@@ -1,12 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MedicineSchedule.ViewModels"
+             x:DataType="viewmodels:CourseViewModel"
              x:Class="MedicineSchedule.Views.CourseView">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="CourseViewPage"
-                   VerticalOptions="CenterAndExpand" 
-                   HorizontalOptions="CenterAndExpand" />
+            <StackLayout>
+                <Label Text="Название преапарата/процедуры" FontSize="Medium"/>
+                <Entry Text="{Binding Name}" Placeholder="Введите название" FontSize="Medium"/>
+                <Picker SelectedIndex="{Binding MedicineType}" Title="Выберите тип лекарства" FontSize="Medium">
+                    <Picker.Items>
+                        <x:String>Не известно</x:String>
+                        <x:String>Таблетка</x:String>
+                        <x:String>Капсула</x:String>
+                        <x:String>Капли</x:String>
+                        <x:String>Микстура</x:String>
+                        <x:String>Мазь</x:String>
+                        <x:String>Укол</x:String>
+                        <x:String>Процедура</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Связь с едой" FontSize="Medium"/>
+                <Picker SelectedIndex="{Binding FoodRelation}" FontSize="Medium">
+                    <Picker.Items>
+                        <x:String>Не связано</x:String>
+                        <x:String>До еды</x:String>
+                        <x:String>Во время еды</x:String>
+                        <x:String>После еды</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Время приёма"/>
+                <Entry Text="{Binding ReceptionsInDay}" x:Name="ReceptionsInDayEntry" Placeholder="Введите количество приемов(от 1 до 12)" TextChanged="CheckCountEntry"/>
+                <Label x:Name="ReceptionsInDayErrorMsg" IsVisible="False" TextColor="Red" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button x:Name="CreateBtn" Text="Добавить" Command="{Binding CreateCourseCommand}" CommandParameter="{Binding}" />
+                <Button x:Name="SaveBtn" Text="Сохранить" Command="{Binding UpdateCourseCommand}" CommandParameter="{Binding}" />
+                <Button x:Name="DeleteBtn" Text="Удалить" Command="{Binding DeleteCourseCommand}" CommandParameter="{Binding}" />
+                <Button x:Name="CancelBtn" Text="Отменить" Command="{Binding CancelCommand}" CommandParameter="{Binding}" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
