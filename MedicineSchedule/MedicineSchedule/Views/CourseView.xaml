@@ -41,6 +41,13 @@
                         <Label x:Name="ReceptionsInDayErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
+                <Frame>
+                    <StackLayout>
+                        <Label Text="Расписание"/>
+                        <Label Text="Время начала приёма"/>
+                        <DatePicker Date="{Binding StartDate}"/>
+                    </StackLayout>
+                </Frame>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                     <Button x:Name="CreateBtn" Text="Добавить" Command="{Binding CreateCourseCommand}" CommandParameter="{Binding}" />
                     <Button x:Name="SaveBtn" Text="Сохранить" Command="{Binding UpdateCourseCommand}" CommandParameter="{Binding}" />

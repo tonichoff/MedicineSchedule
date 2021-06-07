@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 using Xamarin.Forms;
 
@@ -88,10 +89,24 @@ namespace MedicineSchedule.ViewModels
 			}
 		}
 
+		public DateTime StartDate
+		{
+			get => Course == null ? Course.StartDate : startDate;
+			set
+			{
+				if (Course == null) {
+					startDate = value;
+				} else {
+					Course.StartDate = value;
+				}
+			}
+		}
+
 		private string name;
 		private MedicineType medicineType;
 		private FoodRelation foodRelation;
 		private int receptionsInDayCount;
+		private DateTime startDate;
 
 		public CourseViewModel(Course course = null)
 		{
@@ -104,6 +119,7 @@ namespace MedicineSchedule.ViewModels
 				medicineType = Course.MedicineType;
 				foodRelation = Course.FoodRelation;
 				receptionsInDayCount = Course.ReceptionInDayCount;
+				startDate = Course.StartDate;
 			}
 			
 			CreateCourseCommand = new Command(CreateCourse, Validate);
@@ -124,7 +140,8 @@ namespace MedicineSchedule.ViewModels
 					MedicineName = name,
 					MedicineType = medicineType,
 					FoodRelation = foodRelation,
-					ReceptionInDayCount = receptionsInDayCount
+					ReceptionInDayCount = receptionsInDayCount,
+					StartDate = startDate
 				};
 			}
 			await ParentPage.Navigation.PopModalAsync();
