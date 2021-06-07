@@ -32,12 +32,22 @@
                                 <x:String>После еды</x:String>
                             </Picker.Items>
                         </Picker>
+                        <Label Text="Как измеряем?" FontSize="Medium"/>
+                        <Picker SelectedIndex="{Binding Measuring}" FontSize="Medium">
+                            <Picker.Items>
+                                <x:String>Никак</x:String>
+                                <x:String>В штуках</x:String>
+                                <x:String>В миллиграммах</x:String>
+                                <x:String>В миллилитрах</x:String>
+                            </Picker.Items>
+                        </Picker>
                     </StackLayout>
                 </Frame>
                 <Frame>
                     <StackLayout>
-                        <Label Text="Время приёма"/>
-                        <Entry Text="{Binding ReceptionsInDay}" x:Name="ReceptionsInDayEntry" Placeholder="Введите количество приемов(от 1 до 12)" TextChanged="CheckCountEntry"/>
+                        <Label Text="Время приёма" FontSize="Medium"/>
+                        <Entry Text="{Binding ReceptionsInDay}" x:Name="ReceptionsInDayEntry" Placeholder="Введите количество приемов(от 1 до 12)"
+                               TextChanged="CheckCountEntry" FontSize="Medium"/>
                         <Label x:Name="ReceptionsInDayErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>

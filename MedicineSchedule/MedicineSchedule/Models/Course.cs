@@ -19,7 +19,7 @@ namespace MedicineSchedule.Models
 	public enum Measuring
 	{
 		None,
-		Tablet,
+		Piece,
 		Mg,
 		Ml,
 	}
