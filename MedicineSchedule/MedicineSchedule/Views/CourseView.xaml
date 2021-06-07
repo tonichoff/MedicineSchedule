@@ -46,7 +46,7 @@
                 <Frame>
                     <StackLayout>
                         <Label Text="Время приёма" FontSize="Medium"/>
-                        <Entry Text="{Binding ReceptionsInDay}" x:Name="ReceptionsInDayEntry" Placeholder="Введите количество приемов(от 1 до 12)"
+                        <Entry x:Name="ReceptionsInDayEntry" Text="{Binding ReceptionsInDay}" Placeholder="Введите количество приемов(от 1 до 12)"
                                TextChanged="CheckCountEntry" FontSize="Medium"/>
                         <Label x:Name="ReceptionsInDayErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
@@ -64,6 +64,9 @@
                                 <x:String>Определенное количество раз</x:String>
                             </Picker.Items>
                         </Picker>
+                        <Entry x:Name="DaysCountEntry" Text="{Binding DaysCount}" Placeholder="Сколько дней принимаем"
+                               TextChanged="CheckDaysCountEntry" IsVisible="False" FontSize="Medium"/>
+                        <Label x:Name="DaysCountErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">

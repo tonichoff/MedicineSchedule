@@ -125,6 +125,31 @@ namespace MedicineSchedule.ViewModels
 				} else {
 					Course.ReceptionMode = (ReceptionMode)value;
 				}
+				CreateCourseCommand.ChangeCanExecute();
+				UpdateCourseCommand.ChangeCanExecute();
+			}
+		}
+
+		public string DaysCount
+		{
+			get => (Course == null ? Course.DaysCount : daysCount).ToString();
+			set
+			{
+				if (int.TryParse(value, out int temp)) {
+					if (Course == null) {
+						daysCount = temp;
+					} else {
+						Course.DaysCount = temp;
+					}
+				} else {
+					if (Course == null) {
+						daysCount = 0;
+					} else {
+						Course.DaysCount = 0;
+					}
+				}
+				CreateCourseCommand.ChangeCanExecute();
+				UpdateCourseCommand.ChangeCanExecute();
 			}
 		}
 
@@ -135,6 +160,7 @@ namespace MedicineSchedule.ViewModels
 		private int receptionsInDayCount;
 		private DateTime startDate;
 		private ReceptionMode receptionMode;
+		public int daysCount;
 
 		public CourseViewModel(Course course = null)
 		{
@@ -150,8 +176,10 @@ namespace MedicineSchedule.ViewModels
 				startDate = Course.StartDate;
 				measuring = Course.Measuring;
 				receptionMode = Course.ReceptionMode;
+				daysCount = Course.DaysCount;
 			} else {
 				startDate = DateTime.Now;
+				daysCount = 1;
 			}
 			
 			CreateCourseCommand = new Command(CreateCourse, Validate);
@@ -176,6 +204,7 @@ namespace MedicineSchedule.ViewModels
 					StartDate = startDate,
 					Measuring = measuring,
 					ReceptionMode = receptionMode,
+					DaysCount = daysCount,
 				};
 			}
 			await ParentPage.Navigation.PopModalAsync();
@@ -214,11 +243,13 @@ namespace MedicineSchedule.ViewModels
 			if (Course == null) {
 				return
 					!string.IsNullOrEmpty(name) &&
-					(receptionsInDayCount >= 1 && receptionsInDayCount <= 12);
+					(receptionsInDayCount >= 1 && receptionsInDayCount <= 12) &&
+					(receptionMode != Models.ReceptionMode.DaysCount || daysCount >= 1);
 			} else {
 				return
 					!string.IsNullOrEmpty(Course.MedicineName) &&
-					(Course.ReceptionInDayCount >= 1 && Course.ReceptionInDayCount <= 12);
+					(Course.ReceptionInDayCount >= 1 && Course.ReceptionInDayCount <= 12) &&
+					(Course.ReceptionMode != Models.ReceptionMode.DaysCount || Course.DaysCount >= 1);
 			}
 		}
 	}

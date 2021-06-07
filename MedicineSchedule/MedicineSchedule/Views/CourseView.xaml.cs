@@ -27,6 +27,7 @@ namespace MedicineSchedule.Views
 				FoodPicker.SelectedIndex = 0;
 				MesPicker.SelectedIndex = 0;
 				RecModPicker.SelectedIndex = 0;
+				DaysCountEntry.Text = "1";
 			} else {
 				CreateBtn.IsVisible = false;
 			}
@@ -46,13 +47,27 @@ namespace MedicineSchedule.Views
 			} else {
 				ReceptionsInDayErrorMsg.Text = "";
 				ReceptionsInDayErrorMsg.IsVisible = false;
-				ViewModel.ReceptionsInDay = count.ToString();
 			}
 		}
 
 		private void ReceptionModeChanged(object sender, PropertyChangedEventArgs eventArgs)
 		{
+			DaysCountEntry.IsVisible = RecModPicker.SelectedIndex == 1;
+			DaysCountErrorMsg.IsVisible = RecModPicker.SelectedIndex == 1;
+		}
 
+		private void CheckDaysCountEntry(object sender, EventArgs e)
+		{
+			if (string.IsNullOrEmpty(DaysCountEntry.Text)) {
+				DaysCountErrorMsg.Text = "Вы забыли ввести число";
+				DaysCountErrorMsg.IsVisible = true;
+			} else if (!int.TryParse(DaysCountEntry.Text, out int count) || count <= 0) {
+				DaysCountErrorMsg.Text = "Введите целое число больше 0";
+				DaysCountErrorMsg.IsVisible = true;
+			} else {
+				DaysCountErrorMsg.Text = "";
+				DaysCountErrorMsg.IsVisible = false;
+			}
 		}
 	}
 }
