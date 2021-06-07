@@ -67,6 +67,9 @@
                         <Entry x:Name="DaysCountEntry" Text="{Binding DaysCount}" Placeholder="Сколько дней принимаем"
                                TextChanged="CheckDaysCountEntry" IsVisible="False" FontSize="Medium"/>
                         <Label x:Name="DaysCountErrorMsg" IsVisible="False" TextColor="Red" />
+                        <Entry x:Name="ReceptionsCountEntry" Text="{Binding ReceptionsCount}" Placeholder="Сколько раз принимаем"
+                               TextChanged="CheckReceptionsCountEntry" IsVisible="False" FontSize="Medium"/>
+                        <Label x:Name="ReceptionsCountErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">

@@ -28,6 +28,7 @@ namespace MedicineSchedule.Views
 				MesPicker.SelectedIndex = 0;
 				RecModPicker.SelectedIndex = 0;
 				DaysCountEntry.Text = "1";
+				ReceptionsCountEntry.Text = "1";
 			} else {
 				CreateBtn.IsVisible = false;
 			}
@@ -54,9 +55,12 @@ namespace MedicineSchedule.Views
 		{
 			DaysCountEntry.IsVisible = RecModPicker.SelectedIndex == 1;
 			DaysCountErrorMsg.IsVisible = RecModPicker.SelectedIndex == 1;
+
+			ReceptionsCountEntry.IsVisible = RecModPicker.SelectedIndex == 2;
+			ReceptionsCountErrorMsg.IsVisible = RecModPicker.SelectedIndex == 2;
 		}
 
-		private void CheckDaysCountEntry(object sender, EventArgs e)
+		private void CheckDaysCountEntry(object sender, EventArgs eventArgs)
 		{
 			if (string.IsNullOrEmpty(DaysCountEntry.Text)) {
 				DaysCountErrorMsg.Text = "Вы забыли ввести число";
@@ -67,6 +71,20 @@ namespace MedicineSchedule.Views
 			} else {
 				DaysCountErrorMsg.Text = "";
 				DaysCountErrorMsg.IsVisible = false;
+			}
+		}
+
+		private void CheckReceptionsCountEntry(object sender, EventArgs eventArgs)
+		{
+			if (string.IsNullOrEmpty(DaysCountEntry.Text)) {
+				ReceptionsCountErrorMsg.Text = "Вы забыли ввести число";
+				ReceptionsCountErrorMsg.IsVisible = true;
+			} else if (!int.TryParse(DaysCountEntry.Text, out int count) || count <= 0) {
+				ReceptionsCountErrorMsg.Text = "Введите целое число больше 0";
+				ReceptionsCountErrorMsg.IsVisible = true;
+			} else {
+				ReceptionsCountErrorMsg.Text = "";
+				ReceptionsCountErrorMsg.IsVisible = false;
 			}
 		}
 	}

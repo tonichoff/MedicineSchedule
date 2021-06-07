@@ -69,7 +69,7 @@ namespace MedicineSchedule.Models
 		public DateTime StartDate { get; set; }
 		public ReceptionMode ReceptionMode { get; set; }
 		public DaysMode DaysMode { get; set; }
-		public int ReceptionInDayCount { get; set; }
+		public int ReceptionsInDayCount { get; set; }
 		public int DaysInterval { get; set; }
 		public DaysOfWeek DaysOfWeek { get; set; }
 		public int DaysCount { get; set; }
