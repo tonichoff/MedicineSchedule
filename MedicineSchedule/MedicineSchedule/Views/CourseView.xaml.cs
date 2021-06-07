@@ -23,6 +23,10 @@ namespace MedicineSchedule.Views
 			if (ViewModel.Course == null) {
 				DeleteBtn.IsVisible = false;
 				SaveBtn.IsVisible = false;
+				MedPicker.SelectedIndex = 0;
+				FoodPicker.SelectedIndex = 0;
+				MesPicker.SelectedIndex = 0;
+				RecModPicker.SelectedIndex = 0;
 			} else {
 				CreateBtn.IsVisible = false;
 			}
@@ -44,6 +48,11 @@ namespace MedicineSchedule.Views
 				ReceptionsInDayErrorMsg.IsVisible = false;
 				ViewModel.ReceptionsInDay = count.ToString();
 			}
+		}
+
+		private void ReceptionModeChanged(object sender, PropertyChangedEventArgs eventArgs)
+		{
+
 		}
 	}
 }

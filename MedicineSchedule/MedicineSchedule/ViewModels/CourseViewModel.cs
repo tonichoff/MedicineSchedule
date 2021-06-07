@@ -115,12 +115,26 @@ namespace MedicineSchedule.ViewModels
 			}
 		}
 
+		public int ReceptionMode
+		{
+			get => (int)(Course == null ? Course.ReceptionMode : receptionMode);
+			set
+			{
+				if (Course == null) {
+					receptionMode = (ReceptionMode)value;
+				} else {
+					Course.ReceptionMode = (ReceptionMode)value;
+				}
+			}
+		}
+
 		private string name;
 		private MedicineType medicineType;
 		private FoodRelation foodRelation;
 		private Measuring measuring;
 		private int receptionsInDayCount;
 		private DateTime startDate;
+		private ReceptionMode receptionMode;
 
 		public CourseViewModel(Course course = null)
 		{
@@ -135,8 +149,9 @@ namespace MedicineSchedule.ViewModels
 				receptionsInDayCount = Course.ReceptionInDayCount;
 				startDate = Course.StartDate;
 				measuring = Course.Measuring;
+				receptionMode = Course.ReceptionMode;
 			} else {
-				StartDate = DateTime.Now;
+				startDate = DateTime.Now;
 			}
 			
 			CreateCourseCommand = new Command(CreateCourse, Validate);
@@ -160,6 +175,7 @@ namespace MedicineSchedule.ViewModels
 					ReceptionInDayCount = receptionsInDayCount,
 					StartDate = startDate,
 					Measuring = measuring,
+					ReceptionMode = receptionMode,
 				};
 			}
 			await ParentPage.Navigation.PopModalAsync();

@@ -11,7 +11,7 @@
                     <StackLayout>
                         <Label Text="Название преапарата/процедуры" FontSize="Medium"/>
                         <Entry Text="{Binding Name}" Placeholder="Введите название" FontSize="Medium"/>
-                        <Picker SelectedIndex="{Binding MedicineType}" Title="Выберите тип лекарства" FontSize="Medium">
+                        <Picker x:Name="MedPicker" SelectedIndex="{Binding MedicineType}" Title="Выберите тип лекарства" FontSize="Medium">
                             <Picker.Items>
                                 <x:String>Не известно</x:String>
                                 <x:String>Таблетка</x:String>
@@ -24,7 +24,7 @@
                             </Picker.Items>
                         </Picker>
                         <Label Text="Связь с едой" FontSize="Medium"/>
-                        <Picker SelectedIndex="{Binding FoodRelation}" FontSize="Medium">
+                        <Picker x:Name="FoodPicker" SelectedIndex="{Binding FoodRelation}" FontSize="Medium">
                             <Picker.Items>
                                 <x:String>Не связано</x:String>
                                 <x:String>До еды</x:String>
@@ -33,7 +33,7 @@
                             </Picker.Items>
                         </Picker>
                         <Label Text="Как измеряем?" FontSize="Medium"/>
-                        <Picker SelectedIndex="{Binding Measuring}" FontSize="Medium">
+                        <Picker x:Name="MesPicker" SelectedIndex="{Binding Measuring}" FontSize="Medium">
                             <Picker.Items>
                                 <x:String>Никак</x:String>
                                 <x:String>В штуках</x:String>
@@ -56,6 +56,14 @@
                         <Label Text="Расписание"/>
                         <Label Text="Время начала приёма"/>
                         <DatePicker Date="{Binding StartDate}"/>
+                        <Label Text="Как принимаем?"/>
+                        <Picker x:Name="RecModPicker" SelectedIndex="{Binding ReceptionMode}" FontSize="Medium" PropertyChanged="ReceptionModeChanged">
+                            <Picker.Items>
+                                <x:String>Постоянно</x:String>
+                                <x:String>Определенное количество дней</x:String>
+                                <x:String>Определенное количество раз</x:String>
+                            </Picker.Items>
+                        </Picker>
                     </StackLayout>
                 </Frame>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
