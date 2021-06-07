@@ -49,7 +49,6 @@ namespace MedicineSchedule.ViewModels
 				} else {
 					Course.MedicineType = (MedicineType)value;
 				}
-				//OnPropertyChanged("MedicineType");
 			}
 		}
 
@@ -63,7 +62,6 @@ namespace MedicineSchedule.ViewModels
 				} else {
 					Course.FoodRelation = (FoodRelation)value;
 				}
-				//OnPropertyChanged("FoodRelation");
 			}
 		}
 
@@ -87,7 +85,6 @@ namespace MedicineSchedule.ViewModels
 				}
 				CreateCourseCommand.ChangeCanExecute();
 				UpdateCourseCommand.ChangeCanExecute();
-				//OnPropertyChanged("FoodRelation");
 			}
 		}
 
