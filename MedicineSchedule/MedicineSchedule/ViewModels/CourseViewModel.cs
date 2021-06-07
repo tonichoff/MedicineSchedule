@@ -176,6 +176,44 @@ namespace MedicineSchedule.ViewModels
 			}
 		}
 
+		public int DaysMode
+		{
+			get => (int)(Course == null ? Course.DaysMode : daysMode);
+			set
+			{
+				if (Course == null) {
+					daysMode = (DaysMode)value;
+				} else {
+					Course.DaysMode = (DaysMode)value;
+				}
+				CreateCourseCommand.ChangeCanExecute();
+				UpdateCourseCommand.ChangeCanExecute();
+			}
+		}
+
+		public string DaysInterval
+		{
+			get => (Course == null ? Course.DaysInterval : daysInterval).ToString();
+			set
+			{
+				if (int.TryParse(value, out int temp)) {
+					if (Course == null) {
+						daysInterval = temp;
+					} else {
+						Course.DaysInterval = temp;
+					}
+				} else {
+					if (Course == null) {
+						daysInterval = 0;
+					} else {
+						Course.DaysInterval = 0;
+					}
+				}
+				CreateCourseCommand.ChangeCanExecute();
+				UpdateCourseCommand.ChangeCanExecute();
+			}
+		}
+
 		private string name;
 		private MedicineType medicineType;
 		private FoodRelation foodRelation;
@@ -185,6 +223,8 @@ namespace MedicineSchedule.ViewModels
 		private ReceptionMode receptionMode;
 		private int daysCount;
 		private int receptionsCount;
+		private DaysMode daysMode;
+		private int daysInterval;
 
 		public CourseViewModel(Course course = null)
 		{
@@ -202,10 +242,13 @@ namespace MedicineSchedule.ViewModels
 				receptionMode = Course.ReceptionMode;
 				daysCount = Course.DaysCount;
 				receptionsCount = Course.ReceptionsCount;
+				daysMode = Course.DaysMode;
+				daysInterval = Course.DaysInterval;
 			} else {
 				startDate = DateTime.Now;
 				daysCount = 1;
 				receptionsCount = 1;
+				daysInterval = 1;
 			}
 			
 			CreateCourseCommand = new Command(CreateCourse, Validate);
@@ -232,6 +275,8 @@ namespace MedicineSchedule.ViewModels
 					ReceptionMode = receptionMode,
 					DaysCount = daysCount,
 					ReceptionsCount = receptionsCount,
+					DaysMode = daysMode,
+					DaysInterval = daysInterval,
 				};
 			}
 			await ParentPage.Navigation.PopModalAsync();
@@ -272,13 +317,15 @@ namespace MedicineSchedule.ViewModels
 					!string.IsNullOrEmpty(name) &&
 					(receptionsInDayCount >= 1 && receptionsInDayCount <= 12) &&
 					(receptionMode != Models.ReceptionMode.DaysCount || daysCount >= 1) &&
-					(receptionMode != Models.ReceptionMode.ReceptionCount || receptionsCount >= 1);
+					(receptionMode != Models.ReceptionMode.ReceptionCount || receptionsCount >= 1) &&
+					(daysMode != Models.DaysMode.Interval || daysInterval >= 1);
 			} else {
 				return
 					!string.IsNullOrEmpty(Course.MedicineName) &&
 					(Course.ReceptionsInDayCount >= 1 && Course.ReceptionsInDayCount <= 12) &&
 					(Course.ReceptionMode != Models.ReceptionMode.DaysCount || Course.DaysCount >= 1) &&
-					(Course.ReceptionMode != Models.ReceptionMode.ReceptionCount || Course.ReceptionsCount >= 1);
+					(Course.ReceptionMode != Models.ReceptionMode.ReceptionCount || Course.ReceptionsCount >= 1) &&
+					(Course.DaysMode != Models.DaysMode.Interval || Course.DaysInterval >= 1);
 			}
 		}
 	}

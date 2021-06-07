@@ -46,6 +46,7 @@
                 <Frame>
                     <StackLayout>
                         <Label Text="Время приёма" FontSize="Medium"/>
+                        <Label Text="Сколько раз в день" FontSize="Medium"/>
                         <Entry x:Name="ReceptionsInDayEntry" Text="{Binding ReceptionsInDay}" Placeholder="Введите количество приемов(от 1 до 12)"
                                TextChanged="CheckCountEntry" FontSize="Medium"/>
                         <Label x:Name="ReceptionsInDayErrorMsg" IsVisible="False" TextColor="Red" />
@@ -70,6 +71,17 @@
                         <Entry x:Name="ReceptionsCountEntry" Text="{Binding ReceptionsCount}" Placeholder="Сколько раз принимаем"
                                TextChanged="CheckReceptionsCountEntry" IsVisible="False" FontSize="Medium"/>
                         <Label x:Name="ReceptionsCountErrorMsg" IsVisible="False" TextColor="Red" />
+
+                        <Picker x:Name="DaysModPicker" SelectedIndex="{Binding DaysMode}" FontSize="Medium" PropertyChanged="DaysModeChanged">
+                            <Picker.Items>
+                                <x:String>Каждый день</x:String>
+                                <x:String>С перерывом</x:String>
+                                <x:String>В конкретные дни</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <Entry x:Name="IntervalEntry" Text="{Binding DaysInterval}" Placeholder="Сколько длится перерыв в днях"
+                               TextChanged="CheckIntervalEntry" IsVisible="False" FontSize="Medium"/>
+                        <Label x:Name="IntervalErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
