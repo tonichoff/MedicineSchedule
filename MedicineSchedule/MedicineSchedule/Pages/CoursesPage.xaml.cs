@@ -8,13 +8,23 @@ namespace MedicineSchedule.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class CoursesPage : ContentPage
 	{
+		private CoursesListViewModel viewModel;
+
 		public CoursesPage()
 		{
 			InitializeComponent();
 
-			BindingContext = new CoursesListViewModel() {
+			viewModel = new CoursesListViewModel() {
 				Navigation = Navigation
 			};
+
+			BindingContext = viewModel;
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			viewModel.OnAppearing();
 		}
 	}
 }

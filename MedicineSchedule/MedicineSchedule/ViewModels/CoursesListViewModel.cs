@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 
 using MedicineSchedule.Models;
+using MedicineSchedule.Services;
 using MedicineSchedule.Views;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace MedicineSchedule.ViewModels
 {
@@ -23,7 +26,19 @@ namespace MedicineSchedule.ViewModels
 
 		public INavigation Navigation { get; set; }
 
-		public bool IsUpdating { get; set; }
+		public bool IsUpdating
+		{
+			get => isUpdating;
+			set
+			{
+				isUpdating = value;
+				OnPropertyChanged("IsUpdating");
+			}
+		}
+
+		private readonly DataBase dataBase = new DataBase();
+
+		private bool isUpdating;
 
 		public CoursesListViewModel()
 		{
@@ -33,14 +48,20 @@ namespace MedicineSchedule.ViewModels
 			ShowCourseDetailsCommand = new Command<Course>(ShowCourseDetails);
 		}
 
+		public void OnAppearing()
+		{
+			IsUpdating = true;
+		}
+
 		private async Task ExecuteLoadCoursesCommand()
 		{
 			IsUpdating = true;
 			try {
 				Courses.Clear();
-				var courses = new ObservableCollection<Course>() {
-
-				};
+				var courses = await dataBase.GetAllCourses();
+				foreach (var course in courses) {
+					Courses.Add(course);
+				}
 			} catch (Exception exception) {
 				Debug.WriteLine(
 					$"Thrown exception while trying load courses in CoursesList. Exception message: {exception.Message}"
@@ -58,6 +79,11 @@ namespace MedicineSchedule.ViewModels
 		private async void ShowCourseDetails(Course course)
 		{
 			await Navigation.PushModalAsync(new CourseView(new CourseViewModel((Course)course)));
+		}
+
+		private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

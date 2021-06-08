@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Xamarin.Forms;
 
 using MedicineSchedule.Models;
+using MedicineSchedule.Services;
 
 namespace MedicineSchedule.ViewModels
 {
@@ -226,6 +227,8 @@ namespace MedicineSchedule.ViewModels
 		private DaysMode daysMode;
 		private int daysInterval;
 
+		private readonly DataBase dataBase = new DataBase();
+
 		public CourseViewModel(Course course = null)
 		{
 			Course = course;
@@ -250,7 +253,7 @@ namespace MedicineSchedule.ViewModels
 				receptionsCount = 1;
 				daysInterval = 1;
 			}
-			
+
 			CreateCourseCommand = new Command(CreateCourse, Validate);
 			UpdateCourseCommand = new Command(UpdateCourse, Validate);
 			DeleteCourseCommand = new Command(DeleteCourse);
@@ -265,7 +268,7 @@ namespace MedicineSchedule.ViewModels
 		private async void CreateCourse()
 		{
 			if (Course == null) {
-				StaticCourse = new Course() {
+				Course = new Course() {
 					MedicineName = name,
 					MedicineType = medicineType,
 					FoodRelation = foodRelation,
@@ -278,6 +281,7 @@ namespace MedicineSchedule.ViewModels
 					DaysMode = daysMode,
 					DaysInterval = daysInterval,
 				};
+				dataBase.CreateCourseWithReceptions(Course, null);
 			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
@@ -285,7 +289,7 @@ namespace MedicineSchedule.ViewModels
 		private async void UpdateCourse()
 		{
 			if (Course != null) {
-				StaticCourse = Course;
+				dataBase.UpdateCourse(Course);
 			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
@@ -295,8 +299,7 @@ namespace MedicineSchedule.ViewModels
 			if (Course != null) {
 				bool userIsSure = await ParentPage.DisplayAlert("Вы уверены?", "Вернуть курс будет нельзя", "Да", "Нет");
 				if (userIsSure) {
-					Course = null;
-					StaticCourse = null;
+					dataBase.DeleteCourse(Course);
 					await ParentPage.Navigation.PopModalAsync();
 				}
 			}
