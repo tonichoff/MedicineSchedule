@@ -1,10 +1,11 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using MedicineSchedule.ViewModels;
-
-using System.ComponentModel;
-using System;
 
 namespace MedicineSchedule.Views
 {
@@ -13,12 +14,23 @@ namespace MedicineSchedule.Views
 	{
 		public CourseViewModel ViewModel { get; private set; }
 
+		private int pickersCount;
+		private readonly List<TimePicker> timePickers = new List<TimePicker>();
+
 		public CourseView(CourseViewModel viewModel)
 		{
 			ViewModel = viewModel;
 
 			InitializeComponent();
-			
+
+			for (int i = 0; i < 12; ++i) {
+				var newTimePicker = new TimePicker() { Time = new TimeSpan(12, 0, 0) };
+				timePickers.Add(newTimePicker);
+				ReceptionsFrameLayout.Children.Add(timePickers[i]);
+				timePickers[i].IsVisible = false;
+			}
+			timePickers[0].IsVisible = true;
+
 			ViewModel.ParentPage = this;
 			BindingContext = ViewModel;
 			if (ViewModel.Course == null) {
@@ -31,8 +43,10 @@ namespace MedicineSchedule.Views
 				DaysCountEntry.Text = "1";
 				ReceptionsCountEntry.Text = "1";
 				DaysModPicker.SelectedIndex = 0;
+				pickersCount = 1;
 			} else {
 				CreateBtn.IsVisible = false;
+				pickersCount = ViewModel.Course.ReceptionsCount;
 			}
 		}
 
@@ -48,9 +62,24 @@ namespace MedicineSchedule.Views
 				ReceptionsInDayErrorMsg.Text = "Введите число от 1 до 12";
 				ReceptionsInDayErrorMsg.IsVisible = true;
 			} else {
+				UpdateTimesPickers(count);
 				ReceptionsInDayErrorMsg.Text = "";
 				ReceptionsInDayErrorMsg.IsVisible = false;
 			}
+		}
+
+		private void UpdateTimesPickers(int newCount)
+		{
+			if (newCount > pickersCount) {
+				for (int i = pickersCount; i < newCount; ++i) {
+					timePickers[i].IsVisible = true;
+				}
+			} else if (newCount < pickersCount) {
+				for (int i = newCount; i < pickersCount; ++i) {
+					timePickers[i].IsVisible = false;
+				}
+			}
+			pickersCount = newCount;
 		}
 
 		private void ReceptionModeChanged(object sender, PropertyChangedEventArgs eventArgs)

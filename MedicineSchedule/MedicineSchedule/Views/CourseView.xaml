@@ -44,7 +44,7 @@
                     </StackLayout>
                 </Frame>
                 <Frame>
-                    <StackLayout>
+                    <StackLayout x:Name="ReceptionsFrameLayout">
                         <Label Text="Время приёма" FontSize="Medium"/>
                         <Label Text="Сколько раз в день" FontSize="Medium"/>
                         <Entry x:Name="ReceptionsInDayEntry" Text="{Binding ReceptionsInDay}" Placeholder="Введите количество приемов(от 1 до 12)"
