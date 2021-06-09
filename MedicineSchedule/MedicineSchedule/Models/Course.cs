@@ -60,7 +60,6 @@ namespace MedicineSchedule.Models
 		All = ~None
 	}
 
-
 	public class Course
 	{
 		[PrimaryKey, AutoIncrement, Column("Id")]

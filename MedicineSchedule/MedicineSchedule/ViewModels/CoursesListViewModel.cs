@@ -38,6 +38,7 @@ namespace MedicineSchedule.ViewModels
 		private readonly DataBase dataBase = new DataBase();
 
 		private bool isUpdating;
+		private bool isBusy;
 
 		public CoursesListViewModel()
 		{
@@ -50,6 +51,7 @@ namespace MedicineSchedule.ViewModels
 		public void OnAppearing()
 		{
 			IsUpdating = true;
+			isBusy = false;
 		}
 
 		private async Task ExecuteLoadCoursesCommand()
@@ -72,12 +74,18 @@ namespace MedicineSchedule.ViewModels
 
 		private async void CreateCourse()
 		{
-			await Navigation.PushModalAsync(new CourseView(new CourseViewModel()));
+			if (!isBusy) {
+				isBusy = true;
+				await Navigation.PushModalAsync(new CourseView(new CourseViewModel()));
+			}
 		}
 
 		private async void ShowCourseDetails(Course course)
 		{
-			await Navigation.PushModalAsync(new CourseView(new CourseViewModel((Course)course)));
+			if (!isBusy) {
+				isBusy = true;
+				await Navigation.PushModalAsync(new CourseView(new CourseViewModel(course)));
+			}
 		}
 
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "")
