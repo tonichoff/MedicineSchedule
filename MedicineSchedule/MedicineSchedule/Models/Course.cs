@@ -1,5 +1,7 @@
 ﻿using System;
 
+using SQLite;
+
 namespace MedicineSchedule.Models
 {
 	public enum MedicineType
@@ -58,8 +60,10 @@ namespace MedicineSchedule.Models
 		All = ~None
 	}
 
+
 	public class Course
 	{
+		[PrimaryKey, AutoIncrement, Column("Id")]
 		public int Id { get; set; }
 		public string MedicineName { get; set; }
 		public MedicineType MedicineType { get; set; }

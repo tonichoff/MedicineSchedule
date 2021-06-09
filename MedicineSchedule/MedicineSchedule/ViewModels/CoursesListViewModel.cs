@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -9,8 +10,6 @@ using Xamarin.Forms;
 using MedicineSchedule.Models;
 using MedicineSchedule.Services;
 using MedicineSchedule.Views;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace MedicineSchedule.ViewModels
 {
