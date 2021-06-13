@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Xamarin.Forms;
@@ -10,8 +11,6 @@ namespace MedicineSchedule.ViewModels
 {
 	public class CourseViewModel : INotifyPropertyChanged
 	{
-		public static Course StaticCourse;
-
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public Page ParentPage { get; set; }
@@ -22,6 +21,8 @@ namespace MedicineSchedule.ViewModels
 		public Command CancelCommand { get; set; }
 
 		public Course Course { get; private set; }
+		public List<Reception> Receptions { get; private set; }
+		public List<TimeSpan> Times { get; set; }
 
 		public string Name
 		{
@@ -229,12 +230,11 @@ namespace MedicineSchedule.ViewModels
 
 		private readonly DataBase dataBase = new DataBase();
 
-		public CourseViewModel(Course course = null)
+		public CourseViewModel(Course course = null, List<Reception> receptions = null)
 		{
 			Course = course;
-			if (course == null && StaticCourse != null) {
-				Course = StaticCourse;
-			}
+			Receptions = receptions;
+			Times = new List<TimeSpan>();
 			if (Course != null) {
 				name = Course.MedicineName;
 				medicineType = Course.MedicineType;
@@ -250,8 +250,21 @@ namespace MedicineSchedule.ViewModels
 			} else {
 				startDate = DateTime.Now;
 				daysCount = 1;
+				receptionsInDayCount = 1;
 				receptionsCount = 1;
 				daysInterval = 1;
+			}
+
+			if (Receptions == null) {
+				Receptions = new List<Reception>();
+			}
+
+			for (int i = 0; i < 12; ++i) {
+				Times.Add(
+					(i < receptionsInDayCount && i < Receptions.Count)
+					? Receptions[i].Time
+					: new TimeSpan(12, 0, 0)
+				);
 			}
 
 			CreateCourseCommand = new Command(CreateCourse, Validate);
@@ -281,7 +294,18 @@ namespace MedicineSchedule.ViewModels
 					DaysMode = daysMode,
 					DaysInterval = daysInterval,
 				};
-				dataBase.CreateCourseWithReceptions(Course, null);
+				var creatingTask = dataBase.CreateCourseAndGetId(Course);
+				creatingTask.Wait();
+				int courseId = Course.Id;
+				var receptions = new List<Reception>();
+				for (int i = 0; i < Course.ReceptionsInDayCount; ++i) {
+					receptions.Add(new Reception() {
+						CourseId = courseId,
+						Time = Times[i],
+						MedicineValue = 0.0,
+					});
+				} 
+				await dataBase.CreateReceptions(receptions);
 			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
@@ -290,6 +314,32 @@ namespace MedicineSchedule.ViewModels
 		{
 			if (Course != null) {
 				dataBase.UpdateCourse(Course);
+			}
+			if (Receptions != null) {
+				int newCount = Course.ReceptionsInDayCount;
+				int oldCount = Receptions.Count;
+				if (newCount < oldCount) {
+					for (int i = newCount; i < oldCount; ++i) {
+						dataBase.DeleteReception(Receptions[i]);
+					}
+					Receptions.RemoveRange(newCount, oldCount - newCount);
+				} else if (newCount > oldCount) {
+					for (int i = oldCount; i < newCount; ++i) {
+						var reception = new Reception() {
+							CourseId = Course.Id,
+							Time = Times[i],
+							MedicineValue = 0.0,
+						};
+						Receptions.Add(reception);
+						await dataBase.CreateReception(reception);
+					}
+				}
+				for (int i = 0; i < Math.Min(newCount, oldCount); ++i) {
+					if (Receptions[i].Time != Times[i]) {
+						Receptions[i].Time = Times[i];
+						await dataBase.UpdateReception(Receptions[i]);
+					}
+				}
 			}
 			await ParentPage.Navigation.PopModalAsync();
 		}

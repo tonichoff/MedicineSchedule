@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -18,6 +19,8 @@ namespace MedicineSchedule.ViewModels
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public ObservableCollection<Course> Courses { get; set; }
+		public Dictionary<int, List<Reception>> Receptions { get; set; }
+		public List<TimeSpan> Times { get; set; }
 
 		public Command LoadCoursesCommand { get; set; }
 		public Command CreateCourseCommand { get; set; }
@@ -43,6 +46,7 @@ namespace MedicineSchedule.ViewModels
 		public CoursesListViewModel()
 		{
 			Courses = new ObservableCollection<Course>();
+			Receptions = new Dictionary<int, List<Reception>>();
 			LoadCoursesCommand = new Command(async () => await ExecuteLoadCoursesCommand());
 			CreateCourseCommand = new Command(CreateCourse);
 			ShowCourseDetailsCommand = new Command<Course>(ShowCourseDetails);
@@ -59,9 +63,12 @@ namespace MedicineSchedule.ViewModels
 			IsUpdating = true;
 			try {
 				Courses.Clear();
-				var courses = await dataBase.GetAllCourses();
-				foreach (var course in courses) {
+				Receptions.Clear();
+				var coursesAndReceptions = dataBase.GetAllCoursesWithReceptions().Result;
+				foreach (var item in coursesAndReceptions) {
+					var (course, receptions) = item;
 					Courses.Add(course);
+					Receptions[course.Id] = receptions;
 				}
 			} catch (Exception exception) {
 				Debug.WriteLine(
@@ -84,7 +91,11 @@ namespace MedicineSchedule.ViewModels
 		{
 			if (!isBusy) {
 				isBusy = true;
-				await Navigation.PushModalAsync(new CourseView(new CourseViewModel(course)));
+				await Navigation.PushModalAsync(
+					new CourseView(
+						new CourseViewModel(course, Receptions[course.Id])
+					)
+				);
 			}
 		}
 

@@ -28,8 +28,13 @@ namespace MedicineSchedule.Views
 				timePickers.Add(newTimePicker);
 				ReceptionsFrameLayout.Children.Add(timePickers[i]);
 				timePickers[i].IsVisible = false;
+				timePickers[i].Time = ViewModel.Times[i];
+				int index = i;
+				timePickers[i].PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
+					var picker = (TimePicker)sender;
+					ViewModel.Times[index] = picker.Time;
+				};
 			}
-			timePickers[0].IsVisible = true;
 
 			ViewModel.ParentPage = this;
 			BindingContext = ViewModel;
@@ -46,7 +51,11 @@ namespace MedicineSchedule.Views
 				pickersCount = 1;
 			} else {
 				CreateBtn.IsVisible = false;
-				pickersCount = ViewModel.Course.ReceptionsCount;
+				pickersCount = ViewModel.Course.ReceptionsInDayCount;
+			}
+
+			for (int i = 0; i < pickersCount; ++i) {
+				timePickers[i].IsVisible = true;
 			}
 		}
 

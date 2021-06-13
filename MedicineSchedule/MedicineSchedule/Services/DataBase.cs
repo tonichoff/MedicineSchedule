@@ -34,14 +34,21 @@ namespace MedicineSchedule.Services
 			}
 		}
 
-		public async void CreateCourseWithReceptions(Course course, List<Reception> receptions)
+		public Task<int> CreateCourseAndGetId(Course course)
 		{
-			await connection.InsertAsync(course);
-			if (receptions != null) {
-				foreach (var recept in receptions) {
-					await connection.InsertAsync(recept);
-				}
+			return connection.InsertAsync(course);
+		}
+
+		public async Task CreateReceptions(List<Reception> receptions)
+		{
+			foreach (var reception in receptions) {
+				await connection.InsertAsync(reception);
 			}
+		}
+
+		public async Task CreateReception(Reception reception)
+		{
+			await connection.InsertAsync(reception);
 		}
 
 		public async void UpdateCourse(Course course)
@@ -49,7 +56,7 @@ namespace MedicineSchedule.Services
 			await connection.UpdateAsync(course);
 		}
 
-		public async void UpdateReception(Reception reception)
+		public async Task UpdateReception(Reception reception)
 		{
 			await connection.UpdateAsync(reception);
 		}
@@ -63,9 +70,27 @@ namespace MedicineSchedule.Services
 			}
 		}
 
-		public async Task<IEnumerable<Course>> GetAllCourses()
+		public async void DeleteReception(Reception reception)
 		{
-			return await connection.Table<Course>().ToListAsync();
+			await connection.DeleteAsync(reception);
+		} 
+
+		public async Task<List<(Course, List<Reception>)>> GetAllCoursesWithReceptions()
+		{
+			var result = new List<(Course, List<Reception>)>();
+			var courses = connection.Table<Course>().ToListAsync();
+			foreach (var course in courses.Result) {
+				result.Add(
+					(
+						course,
+						connection.Table<Reception>()
+							.Where(r => r.CourseId == course.Id)
+							.ToListAsync()
+							.Result
+					)
+				);
+			}
+			return result;
 		}
 	}
 }
