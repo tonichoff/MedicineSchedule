@@ -78,9 +78,14 @@
                                 <x:String>С перерывом</x:String>
                             </Picker.Items>
                         </Picker>
-                        <Entry x:Name="IntervalEntry" Text="{Binding DaysInterval}" Placeholder="Сколько длится перерыв в днях"
+                        <Label x:Name="IntervalLabel" Text="Сколько дней принимаем?" IsVisible="False"/>
+                        <Entry x:Name="IntervalEntry" Text="{Binding DaysInterval}"
                                TextChanged="CheckIntervalEntry" IsVisible="False" FontSize="Medium"/>
                         <Label x:Name="IntervalErrorMsg" IsVisible="False" TextColor="Red" />
+                        <Label x:Name="DaysSkipLabel" Text="Сколько дней отдыхаем?" IsVisible="False"/>
+                        <Entry x:Name="DaysSkipEntry" Text="{Binding DaysSkip}"
+                               TextChanged="CheckDaysSkipEntry" IsVisible="False" FontSize="Medium"/>
+                        <Label x:Name="DaysSkipErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">

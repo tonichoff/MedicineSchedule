@@ -216,6 +216,29 @@ namespace MedicineSchedule.ViewModels
 			}
 		}
 
+		public string DaysSkip
+		{
+			get => (Course == null ? Course.DaysSkip : daysSkip).ToString();
+			set
+			{
+				if (int.TryParse(value, out int temp)) {
+					if (Course == null) {
+						daysSkip = temp;
+					} else {
+						Course.DaysSkip = temp;
+					}
+				} else {
+					if (Course == null) {
+						daysSkip = 0;
+					} else {
+						Course.DaysSkip = 0;
+					}
+				}
+				CreateCourseCommand.ChangeCanExecute();
+				UpdateCourseCommand.ChangeCanExecute();
+			}
+		}
+
 		private string name;
 		private MedicineType medicineType;
 		private FoodRelation foodRelation;
@@ -227,6 +250,7 @@ namespace MedicineSchedule.ViewModels
 		private int receptionsCount;
 		private DaysMode daysMode;
 		private int daysInterval;
+		public int daysSkip;
 
 		private readonly DataBase dataBase = new DataBase();
 
@@ -247,12 +271,14 @@ namespace MedicineSchedule.ViewModels
 				receptionsCount = Course.ReceptionsCount;
 				daysMode = Course.DaysMode;
 				daysInterval = Course.DaysInterval;
+				daysSkip = Course.DaysSkip;
 			} else {
 				startDate = DateTime.Now;
 				daysCount = 1;
 				receptionsInDayCount = 1;
 				receptionsCount = 1;
 				daysInterval = 1;
+				daysSkip = 1;
 			}
 
 			if (Receptions == null) {
@@ -293,6 +319,7 @@ namespace MedicineSchedule.ViewModels
 					ReceptionsCount = receptionsCount,
 					DaysMode = daysMode,
 					DaysInterval = daysInterval,
+					DaysSkip = daysSkip,
 				};
 				var creatingTask = dataBase.CreateCourseAndGetId(Course);
 				creatingTask.Wait();
@@ -374,14 +401,14 @@ namespace MedicineSchedule.ViewModels
 					(receptionsInDayCount >= 1 && receptionsInDayCount <= 12) &&
 					(receptionMode != Models.ReceptionMode.DaysCount || daysCount >= 1) &&
 					(receptionMode != Models.ReceptionMode.ReceptionCount || receptionsCount >= 1) &&
-					(daysMode != Models.DaysMode.Interval || daysInterval >= 1);
+					(daysMode != Models.DaysMode.Interval || (daysInterval >= 1 && daysSkip >= 1));
 			} else {
 				return
 					!string.IsNullOrEmpty(Course.MedicineName) &&
 					(Course.ReceptionsInDayCount >= 1 && Course.ReceptionsInDayCount <= 12) &&
 					(Course.ReceptionMode != Models.ReceptionMode.DaysCount || Course.DaysCount >= 1) &&
 					(Course.ReceptionMode != Models.ReceptionMode.ReceptionCount || Course.ReceptionsCount >= 1) &&
-					(Course.DaysMode != Models.DaysMode.Interval || Course.DaysInterval >= 1);
+					(Course.DaysMode != Models.DaysMode.Interval || (Course.DaysInterval >= 1 && Course.DaysSkip >= 1));
 			}
 		}
 	}

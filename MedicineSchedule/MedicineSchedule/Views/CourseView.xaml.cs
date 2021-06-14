@@ -130,8 +130,13 @@ namespace MedicineSchedule.Views
 
 		private void DaysModeChanged(object sender, PropertyChangedEventArgs eventArgs)
 		{
+			IntervalLabel.IsVisible = DaysModPicker.SelectedIndex == 1;
 			IntervalEntry.IsVisible = DaysModPicker.SelectedIndex == 1;
 			IntervalErrorMsg.IsVisible = DaysModPicker.SelectedIndex == 1;
+
+			DaysSkipLabel.IsVisible = DaysModPicker.SelectedIndex == 1;
+			DaysSkipEntry.IsVisible = DaysModPicker.SelectedIndex == 1;
+			DaysSkipErrorMsg.IsVisible = DaysModPicker.SelectedIndex == 1;
 		}
 
 		private void CheckIntervalEntry(object sender, EventArgs eventArgs)
@@ -145,6 +150,20 @@ namespace MedicineSchedule.Views
 			} else {
 				IntervalErrorMsg.Text = "";
 				IntervalErrorMsg.IsVisible = false;
+			}
+		}
+
+		private void CheckDaysSkipEntry(object sender, EventArgs eventArgs)
+		{
+			if (string.IsNullOrEmpty(DaysSkipEntry.Text)) {
+				DaysSkipErrorMsg.Text = "Вы забыли ввести число";
+				DaysSkipErrorMsg.IsVisible = true;
+			} else if (!int.TryParse(DaysSkipEntry.Text, out int count) || count <= 0) {
+				DaysSkipErrorMsg.Text = "Введите целое число больше 0";
+				DaysSkipErrorMsg.IsVisible = true;
+			} else {
+				DaysSkipErrorMsg.Text = "";
+				DaysSkipErrorMsg.IsVisible = false;
 			}
 		}
 	}

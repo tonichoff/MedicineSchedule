@@ -104,14 +104,14 @@ namespace MedicineSchedule.Services
 						receptions.AddRange(GetReceptionsHelper(course));
 						break;
 					case ReceptionMode.ReceptionCount:
-						if (course.ReceptionsWasTakenCount < course.ReceptionsCount) {
-							receptions.AddRange(GetReceptionsHelper(course));
-						}
+						//if (course.ReceptionsWasTakenCount < course.ReceptionsCount) {
+						//	receptions.AddRange(GetReceptionsHelper(course));
+						//}
 						break;
 					case ReceptionMode.DaysCount:
-						if (course.DaysWasTakenCount <= course.DaysCount) {
-							receptions.AddRange(GetReceptionsHelper(course));
-						}
+						//if (course.DaysWasTakenCount <= course.DaysCount) {
+						//	receptions.AddRange(GetReceptionsHelper(course));
+						//}
 						break;
 				}
 			}
