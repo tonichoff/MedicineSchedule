@@ -100,34 +100,6 @@ namespace MedicineSchedule.Views
 			ReceptionsCountErrorMsg.IsVisible = RecModPicker.SelectedIndex == 2;
 		}
 
-		private void CheckDaysCountEntry(object sender, EventArgs eventArgs)
-		{
-			if (string.IsNullOrEmpty(DaysCountEntry.Text)) {
-				DaysCountErrorMsg.Text = "Вы забыли ввести число";
-				DaysCountErrorMsg.IsVisible = true;
-			} else if (!int.TryParse(DaysCountEntry.Text, out int count) || count <= 0) {
-				DaysCountErrorMsg.Text = "Введите целое число больше 0";
-				DaysCountErrorMsg.IsVisible = true;
-			} else {
-				DaysCountErrorMsg.Text = "";
-				DaysCountErrorMsg.IsVisible = false;
-			}
-		}
-
-		private void CheckReceptionsCountEntry(object sender, EventArgs eventArgs)
-		{
-			if (string.IsNullOrEmpty(ReceptionsCountEntry.Text)) {
-				ReceptionsCountErrorMsg.Text = "Вы забыли ввести число";
-				ReceptionsCountErrorMsg.IsVisible = true;
-			} else if (!int.TryParse(ReceptionsCountEntry.Text, out int count) || count <= 0) {
-				ReceptionsCountErrorMsg.Text = "Введите целое число больше 0";
-				ReceptionsCountErrorMsg.IsVisible = true;
-			} else {
-				ReceptionsCountErrorMsg.Text = "";
-				ReceptionsCountErrorMsg.IsVisible = false;
-			}
-		}
-
 		private void DaysModeChanged(object sender, PropertyChangedEventArgs eventArgs)
 		{
 			IntervalLabel.IsVisible = DaysModPicker.SelectedIndex == 1;
@@ -139,31 +111,37 @@ namespace MedicineSchedule.Views
 			DaysSkipErrorMsg.IsVisible = DaysModPicker.SelectedIndex == 1;
 		}
 
+		private void CheckDaysCountEntry(object sender, EventArgs eventArgs)
+		{
+			CheckTextEntry(DaysCountEntry, DaysCountErrorMsg);
+		}
+
+		private void CheckReceptionsCountEntry(object sender, EventArgs eventArgs)
+		{
+			CheckTextEntry(ReceptionsCountEntry, ReceptionsCountErrorMsg);
+		}
+
 		private void CheckIntervalEntry(object sender, EventArgs eventArgs)
 		{
-			if (string.IsNullOrEmpty(IntervalEntry.Text)) {
-				IntervalErrorMsg.Text = "Вы забыли ввести число";
-				IntervalErrorMsg.IsVisible = true;
-			} else if (!int.TryParse(IntervalEntry.Text, out int count) || count <= 0) {
-				IntervalErrorMsg.Text = "Введите целое число больше 0";
-				IntervalErrorMsg.IsVisible = true;
-			} else {
-				IntervalErrorMsg.Text = "";
-				IntervalErrorMsg.IsVisible = false;
-			}
+			CheckTextEntry(IntervalEntry, IntervalErrorMsg);
 		}
 
 		private void CheckDaysSkipEntry(object sender, EventArgs eventArgs)
 		{
-			if (string.IsNullOrEmpty(DaysSkipEntry.Text)) {
-				DaysSkipErrorMsg.Text = "Вы забыли ввести число";
-				DaysSkipErrorMsg.IsVisible = true;
-			} else if (!int.TryParse(DaysSkipEntry.Text, out int count) || count <= 0) {
-				DaysSkipErrorMsg.Text = "Введите целое число больше 0";
-				DaysSkipErrorMsg.IsVisible = true;
+			CheckTextEntry(DaysSkipEntry, DaysSkipErrorMsg);
+		}
+
+		private void CheckTextEntry(Entry entry, Label errorLabel)
+		{
+			if (string.IsNullOrEmpty(entry.Text)) {
+				errorLabel.Text = "Вы забыли ввести число";
+				errorLabel.IsVisible = true;
+			} else if (!int.TryParse(entry.Text, out int count) || count <= 0) {
+				errorLabel.Text = "Введите целое число больше 0";
+				errorLabel.IsVisible = true;
 			} else {
-				DaysSkipErrorMsg.Text = "";
-				DaysSkipErrorMsg.IsVisible = false;
+				errorLabel.Text = "";
+				errorLabel.IsVisible = false;
 			}
 		}
 	}
