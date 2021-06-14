@@ -51,7 +51,7 @@ namespace MedicineSchedule.Services
 			await connection.InsertAsync(reception);
 		}
 
-		public async void UpdateCourse(Course course)
+		public async Task UpdateCourse(Course course)
 		{
 			await connection.UpdateAsync(course);
 		}
@@ -61,12 +61,12 @@ namespace MedicineSchedule.Services
 			await connection.UpdateAsync(reception);
 		}
 
-		public async void DeleteCourse(Course course)
+		public async Task DeleteCourse(Course course)
 		{
 			await connection.DeleteAsync(course);
 		}
 
-		public async void DeleteReception(Reception reception)
+		public async Task DeleteReception(Reception reception)
 		{
 			await connection.DeleteAsync(reception);
 		} 

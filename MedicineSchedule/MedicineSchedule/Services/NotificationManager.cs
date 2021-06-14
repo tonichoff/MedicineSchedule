@@ -12,41 +12,27 @@ namespace MedicineSchedule.Services
 		private static readonly TimeSpan RepeatInterval = new TimeSpan(0, 10, 0);
 		private static readonly int RepeatCount = 3;
 
-		public static void CreateNotifications(Course course, List<Reception> receptions)
+		public static void CreateNotification(int id, DateTime? date)
 		{
-			foreach (var reception in receptions) {
-				NotificationCenter.Current.Show(
-					GetNotificationRequest(reception, course.StartDate + reception.Time)
-				);
-			}
+			NotificationCenter.Current.Show(GetNotificationRequest(id, date));
 		}
 
-		public static void UpdateNotifications(Course course, List<Reception> receptions)
+		public static void DeleteNotification(int id)
 		{
-			DeleteNotifications(receptions);
-			foreach (var reception in receptions) {
-				var time = GetNextReceptionTime(course, reception);
-				if (time != null) {
-					NotificationCenter.Current.Show(
-						GetNotificationRequest(reception, time)
-					);
-				}
-			}
+			NotificationCenter.Current.Cancel(id);
 		}
 
-		public static void DeleteNotifications(List<Reception> receptions)
+		public static DateTime? GetNextTime(Reception reception, Course course)
 		{
-			foreach (var reception in receptions) {
-				NotificationCenter.Current.Cancel(reception.Id);
-			}
+			return null;
 		}
 
-		private static NotificationRequest GetNotificationRequest(Reception reception, DateTime? time)
+		private static NotificationRequest GetNotificationRequest(int id, DateTime? time)
 		{
 			var repeatInterval = RepeatInterval;
 			var cancelTime = time + RepeatInterval * RepeatCount;
 			return new NotificationRequest() {
-				NotificationId = reception.Id,
+				NotificationId = id,
 				Title = "Эй, дед!",
 				Description = "Прими таблетки!",
 				Schedule = new NotificationRequestSchedule() {
@@ -59,11 +45,6 @@ namespace MedicineSchedule.Services
 					Priority = NotificationPriority.High,
 				}
 			};
-		}
-
-		private static DateTime? GetNextReceptionTime(Course course, Reception reception)
-		{
-			return null;
 		}
 	}
 }

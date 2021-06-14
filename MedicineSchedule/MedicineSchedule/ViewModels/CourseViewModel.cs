@@ -335,7 +335,9 @@ namespace MedicineSchedule.ViewModels
 				await Task.Run(() => {
 					var creatingTask = dataBase.CreateReceptions(receptions);
 					creatingTask.Wait();
-					NotificationManager.CreateNotifications(Course, receptions);
+					foreach (var reception in receptions) {
+						NotificationManager.CreateNotification(reception.Id, Course.StartDate + reception.Time);
+					}
 				});
 			}
 			await ParentPage.Navigation.PopModalAsync();
@@ -344,14 +346,15 @@ namespace MedicineSchedule.ViewModels
 		private async void UpdateCourse()
 		{
 			if (Course != null) {
-				dataBase.UpdateCourse(Course);
+				await dataBase.UpdateCourse(Course);
 			}
 			if (Receptions != null) {
 				int newCount = Course.ReceptionsInDayCount;
 				int oldCount = Receptions.Count;
 				if (newCount < oldCount) {
 					for (int i = newCount; i < oldCount; ++i) {
-						dataBase.DeleteReception(Receptions[i]);
+						await dataBase.DeleteReception(Receptions[i]);
+						await Task.Run(() => NotificationManager.DeleteNotification(Receptions[i].Id));
 					}
 					Receptions.RemoveRange(newCount, oldCount - newCount);
 				} else if (newCount > oldCount) {
@@ -362,18 +365,28 @@ namespace MedicineSchedule.ViewModels
 							MedicineValue = 0.0,
 						};
 						Receptions.Add(reception);
-						await dataBase.CreateReception(reception);
+						await Task.Run(() => {
+							var task = dataBase.CreateReception(reception);
+							task.Wait();
+							NotificationManager.CreateNotification(
+								reception.Id, NotificationManager.GetNextTime(reception, Course)
+							);
+						});
 					}
 				}
 				for (int i = 0; i < Math.Min(newCount, oldCount); ++i) {
 					if (Receptions[i].Time != Times[i]) {
 						Receptions[i].Time = Times[i];
-						await dataBase.UpdateReception(Receptions[i]);
+						await Task.Run(() => {
+							var updatingTask = dataBase.UpdateReception(Receptions[i]);
+							updatingTask.Wait();
+							NotificationManager.DeleteNotification(Receptions[i].Id);
+							NotificationManager.CreateNotification(
+								Receptions[i].Id, NotificationManager.GetNextTime(Receptions[i], Course)
+							);
+						});
 					}
 				}
-			}
-			if (Course != null && Receptions != null) {
-				NotificationManager.UpdateNotifications(Course, Receptions);
 			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
@@ -383,11 +396,13 @@ namespace MedicineSchedule.ViewModels
 			if (Course != null) {
 				bool userIsSure = await ParentPage.DisplayAlert("Вы уверены?", "Вернуть курс будет нельзя", "Да", "Нет");
 				if (userIsSure) {
-					dataBase.DeleteCourse(Course);
-					foreach (var reception in Receptions) {
-						dataBase.DeleteReception(reception);
-					}
-					await Task.Run(() => NotificationManager.DeleteNotifications(Receptions));
+					await Task.Run(async () => {
+						await dataBase.DeleteCourse(Course);
+						foreach (var reception in Receptions) {
+							await dataBase.DeleteReception(reception);
+							await Task.Run(() => NotificationManager.DeleteNotification(reception.Id));
+						}
+					});
 					await ParentPage.Navigation.PopModalAsync();
 				}
 			}
