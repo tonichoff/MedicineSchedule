@@ -332,6 +332,7 @@ namespace MedicineSchedule.ViewModels
 					});
 				} 
 				await dataBase.CreateReceptions(receptions);
+				NotificationManager.CreateNotifications(Course, receptions);
 			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
@@ -367,6 +368,9 @@ namespace MedicineSchedule.ViewModels
 					}
 				}
 			}
+			if (Course != null && Receptions != null) {
+				NotificationManager.UpdateNotifications(Course, Receptions);
+			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
 
@@ -379,6 +383,7 @@ namespace MedicineSchedule.ViewModels
 					foreach (var reception in Receptions) {
 						dataBase.DeleteReception(reception);
 					}
+					NotificationManager.DeleteNotifications(Course, Receptions);
 					await ParentPage.Navigation.PopModalAsync();
 				}
 			}

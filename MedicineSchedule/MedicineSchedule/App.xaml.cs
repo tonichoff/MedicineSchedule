@@ -1,6 +1,8 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms;
+
+using Plugin.LocalNotification;
+
+using MedicineSchedule.Pages;
 
 namespace MedicineSchedule
 {
@@ -10,19 +12,20 @@ namespace MedicineSchedule
 		{
 			InitializeComponent();
 
+			NotificationCenter.Current.NotificationReceived += OnLocalNotificationReceived;
+			NotificationCenter.Current.NotificationTapped += OnLocalNotificationTapped;
+
 			MainPage = new MainPage();
 		}
 
-		protected override void OnStart()
+		private void OnLocalNotificationReceived(NotificationReceivedEventArgs e)
 		{
+			MainPage.Navigation.PushModalAsync(new NotificationPage());
 		}
 
-		protected override void OnSleep()
+		private void OnLocalNotificationTapped(NotificationTappedEventArgs e)
 		{
-		}
-
-		protected override void OnResume()
-		{
+			MainPage.Navigation.PushModalAsync(new NotificationPage());
 		}
 	}
 }
