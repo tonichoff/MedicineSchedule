@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -77,6 +78,17 @@ namespace MedicineSchedule.Pages
 			}
 			EatLabel.Text = description;
 			EatButton.Text = buttonText;
+		}
+
+		private void EatButtonClicked(object sender, EventArgs eventArgs)
+		{
+			Task.Run(async () => {
+				await Navigation.PopModalAsync();
+				var time = NotificationManager.GetNextTime(reception, course);
+				if (time != null) {
+					NotificationManager.CreateNotification(reception.Id, time);
+				}
+			});
 		}
 	}
 }
