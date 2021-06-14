@@ -48,7 +48,6 @@ namespace MedicineSchedule.Views
 				DaysCountEntry.Text = "1";
 				ReceptionsCountEntry.Text = "1";
 				DaysModPicker.SelectedIndex = 0;
-				pickersCount = 1;
 			} else {
 				CreateBtn.IsVisible = false;
 				pickersCount = ViewModel.Course.ReceptionsInDayCount;
