@@ -71,20 +71,18 @@ namespace MedicineSchedule.Services
 			await connection.DeleteAsync(reception);
 		} 
 
-		public async Task<List<(Course, List<Reception>)>> GetAllCoursesWithReceptions()
+		public List<(Course, List<Reception>)> GetAllCoursesWithReceptions()
 		{
 			var result = new List<(Course, List<Reception>)>();
 			var courses = connection.Table<Course>().ToListAsync();
 			foreach (var course in courses.Result) {
-				result.Add(
-					(
-						course,
-						connection.Table<Reception>()
-							.Where(r => r.CourseId == course.Id)
-							.ToListAsync()
-							.Result
-					)
-				);
+				result.Add((
+					course,
+					connection.Table<Reception>()
+						.Where(r => r.CourseId == course.Id)
+						.ToListAsync()
+						.Result
+				));
 			}
 			return result;
 		}
@@ -99,7 +97,7 @@ namespace MedicineSchedule.Services
 			return await connection.GetAsync<Reception>(id);
 		}
 
-		public async Task<List<Reception>> GetReceptionsByDate(DateTime date)
+		public List<Reception> GetReceptionsByDate(DateTime date)
 		{
 			var clearDate = date - date.TimeOfDay;
 			var courses = connection.Table<Course>().Where(c => c.StartDate <= clearDate).ToListAsync();

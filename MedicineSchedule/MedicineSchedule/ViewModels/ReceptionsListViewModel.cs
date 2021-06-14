@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -53,10 +51,12 @@ namespace MedicineSchedule.ViewModels
 		public ReceptionsListViewModel()
 		{
 			Date = DateTime.Now;
-			LoadReceptionsCommand = new Command(async () => await ExecuteLoadReceptionsCommand());
+			LoadReceptionsCommand = new Command(async () => await Task.Run(
+				() => ExecuteLoadReceptionsCommand()
+			));
 		}
 
-		private async Task ExecuteLoadReceptionsCommand()
+		private void ExecuteLoadReceptionsCommand()
 		{
 			IsUpdating = true;
 			try {
@@ -75,11 +75,11 @@ namespace MedicineSchedule.ViewModels
 		private async void UpdateReceptions()
 		{
 			Receptions.Clear();
-			var receptionTask = dataBase.GetReceptionsByDate(Date);
-			receptionTask.Wait();
-			foreach (var reception in receptionTask.Result) {
-				Receptions.Add(reception);
-			}
+			await Task.Run(() => {
+				foreach (var reception in dataBase.GetReceptionsByDate(Date)) {
+					Receptions.Add(reception);
+				}
+			});
 		}
 
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "")

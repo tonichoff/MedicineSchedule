@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
@@ -330,9 +331,12 @@ namespace MedicineSchedule.ViewModels
 						Time = Times[i],
 						MedicineValue = 0.0,
 					});
-				} 
-				await dataBase.CreateReceptions(receptions);
-				NotificationManager.CreateNotifications(Course, receptions);
+				}
+				await Task.Run(() => {
+					var creatingTask = dataBase.CreateReceptions(receptions);
+					creatingTask.Wait();
+					NotificationManager.CreateNotifications(Course, receptions);
+				});
 			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
@@ -383,7 +387,7 @@ namespace MedicineSchedule.ViewModels
 					foreach (var reception in Receptions) {
 						dataBase.DeleteReception(reception);
 					}
-					NotificationManager.DeleteNotifications(Course, Receptions);
+					await Task.Run(() => NotificationManager.DeleteNotifications(Receptions));
 					await ParentPage.Navigation.PopModalAsync();
 				}
 			}

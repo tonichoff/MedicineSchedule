@@ -49,7 +49,7 @@ namespace MedicineSchedule.ViewModels
 		{
 			Courses = new ObservableCollection<Course>();
 			Receptions = new Dictionary<int, List<Reception>>();
-			LoadCoursesCommand = new Command(async () => await ExecuteLoadCoursesCommand());
+			LoadCoursesCommand = new Command(async () => await Task.Run(() => ExecuteLoadCoursesCommand()));
 			CreateCourseCommand = new Command(CreateCourse);
 			ShowCourseDetailsCommand = new Command<Course>(ShowCourseDetails);
 			DebugCommand = new Command(ShowNotificationPage);
@@ -61,13 +61,13 @@ namespace MedicineSchedule.ViewModels
 			isBusy = false;
 		}
 
-		private async Task ExecuteLoadCoursesCommand()
+		private void ExecuteLoadCoursesCommand()
 		{
 			IsUpdating = true;
 			try {
 				Courses.Clear();
 				Receptions.Clear();
-				var coursesAndReceptions = dataBase.GetAllCoursesWithReceptions().Result;
+				var coursesAndReceptions = dataBase.GetAllCoursesWithReceptions();
 				foreach (var item in coursesAndReceptions) {
 					var (course, receptions) = item;
 					Courses.Add(course);
