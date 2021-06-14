@@ -82,6 +82,21 @@ namespace MedicineSchedule.ViewModels
 			}
 		}
 
+		public string MedicineValue
+		{
+			get => Course == null ? Course.MedicineValue.ToString() : medicineValue.ToString();
+			set
+			{
+				if (double.TryParse(value, out double temp)) {
+					if (Course == null) {
+						medicineValue = temp;
+					} else {
+						Course.MedicineValue = temp;
+					}
+				}
+			}
+		}
+
 		public string ReceptionsInDay
 		{
 			get => (Course == null ? Course.ReceptionsInDayCount : receptionsInDayCount).ToString();
@@ -244,6 +259,7 @@ namespace MedicineSchedule.ViewModels
 		private MedicineType medicineType;
 		private FoodRelation foodRelation;
 		private Measuring measuring;
+		private double medicineValue;
 		private int receptionsInDayCount;
 		private DateTime startDate;
 		private ReceptionMode receptionMode;
@@ -267,6 +283,7 @@ namespace MedicineSchedule.ViewModels
 				receptionsInDayCount = Course.ReceptionsInDayCount;
 				startDate = Course.StartDate;
 				measuring = Course.Measuring;
+				medicineValue = Course.MedicineValue;
 				receptionMode = Course.ReceptionMode;
 				daysCount = Course.DaysCount;
 				receptionsCount = Course.ReceptionsCount;
@@ -314,6 +331,7 @@ namespace MedicineSchedule.ViewModels
 					ReceptionsInDayCount = receptionsInDayCount,
 					StartDate = startDate,
 					Measuring = measuring,
+					MedicineValue = medicineValue,
 					ReceptionMode = receptionMode,
 					DaysCount = daysCount,
 					ReceptionsCount = receptionsCount,
@@ -329,7 +347,6 @@ namespace MedicineSchedule.ViewModels
 					receptions.Add(new Reception() {
 						CourseId = courseId,
 						Time = Times[i],
-						MedicineValue = 0.0,
 					});
 				}
 				await Task.Run(() => {
@@ -362,7 +379,6 @@ namespace MedicineSchedule.ViewModels
 						var reception = new Reception() {
 							CourseId = Course.Id,
 							Time = Times[i],
-							MedicineValue = 0.0,
 						};
 						Receptions.Add(reception);
 						await Task.Run(() => {

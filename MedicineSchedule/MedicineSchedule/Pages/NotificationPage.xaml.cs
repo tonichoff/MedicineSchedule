@@ -41,7 +41,7 @@ namespace MedicineSchedule.Pages
 				case MedicineType.Salve:
 				case MedicineType.Injection:
 					description = $"Пора принимать {course.MedicineName} ";
-					description += $"в количестве {reception.MedicineValue}";
+					description += $"в количестве {course.MedicineValue}";
 					switch (course.Measuring) {
 						case Measuring.Mg:
 							description += " миллиграмм";

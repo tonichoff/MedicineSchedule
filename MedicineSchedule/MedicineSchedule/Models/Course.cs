@@ -67,6 +67,7 @@ namespace MedicineSchedule.Models
 		public string MedicineName { get; set; }
 		public MedicineType MedicineType { get; set; }
 		public Measuring Measuring { get; set; }
+		public double MedicineValue { get; set; }
 		public DateTime StartDate { get; set; }
 		public ReceptionMode ReceptionMode { get; set; }
 		public DaysMode DaysMode { get; set; }

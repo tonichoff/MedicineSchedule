@@ -11,7 +11,8 @@
                     <StackLayout>
                         <Label Text="Название преапарата/процедуры" FontSize="Medium"/>
                         <Entry Text="{Binding Name}" Placeholder="Введите название" FontSize="Medium"/>
-                        <Picker x:Name="MedPicker" SelectedIndex="{Binding MedicineType}" Title="Выберите тип лекарства" FontSize="Medium">
+                        <Picker x:Name="MedPicker" SelectedIndex="{Binding MedicineType}"
+                                Title="Выберите тип лекарства" FontSize="Medium">
                             <Picker.Items>
                                 <x:String>Не известно</x:String>
                                 <x:String>Таблетка</x:String>
@@ -41,6 +42,10 @@
                                 <x:String>В миллилитрах</x:String>
                             </Picker.Items>
                         </Picker>
+                        <Label Text="Сколько надо?" FontSize="Medium"/>
+                        <Entry x:Name="MedicineValueEntry" Text="{Binding MedicineValue}" Placeholder="Введите количество"
+                               TextChanged="CheckMedicineValueEntry" FontSize="Medium"/>
+                        <Label x:Name="MedicineValueErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
                 <Frame>

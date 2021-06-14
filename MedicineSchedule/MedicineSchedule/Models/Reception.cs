@@ -13,8 +13,6 @@ namespace MedicineSchedule.Models
 
 		public int CourseId { get; set; }
 
-		public double MedicineValue { get; set; }
-
 		[Ignore]
 		public string CourseName { get; set; }
 

@@ -59,24 +59,6 @@ namespace MedicineSchedule.Views
 			}
 		}
 
-		private void CheckCountEntry(object sender, EventArgs eventArgs)
-		{
-			if (string.IsNullOrEmpty(ReceptionsInDayEntry.Text)) {
-				ReceptionsInDayErrorMsg.Text = "Вы забыли ввести число";
-				ReceptionsInDayErrorMsg.IsVisible = true;
-			} else if (!int.TryParse(ReceptionsInDayEntry.Text, out int count)) {
-				ReceptionsInDayErrorMsg.Text = "Введите целое число";
-				ReceptionsInDayErrorMsg.IsVisible = true;
-			} else if (count < 1 || count > 12) {
-				ReceptionsInDayErrorMsg.Text = "Введите число от 1 до 12";
-				ReceptionsInDayErrorMsg.IsVisible = true;
-			} else {
-				UpdateTimesPickers(count);
-				ReceptionsInDayErrorMsg.Text = "";
-				ReceptionsInDayErrorMsg.IsVisible = false;
-			}
-		}
-
 		private void UpdateTimesPickers(int newCount)
 		{
 			if (newCount > pickersCount) {
@@ -109,6 +91,38 @@ namespace MedicineSchedule.Views
 			DaysSkipLabel.IsVisible = DaysModPicker.SelectedIndex == 1;
 			DaysSkipEntry.IsVisible = DaysModPicker.SelectedIndex == 1;
 			DaysSkipErrorMsg.IsVisible = DaysModPicker.SelectedIndex == 1;
+		}
+
+		private void CheckCountEntry(object sender, EventArgs eventArgs)
+		{
+			if (string.IsNullOrEmpty(ReceptionsInDayEntry.Text)) {
+				ReceptionsInDayErrorMsg.Text = "Вы забыли ввести число";
+				ReceptionsInDayErrorMsg.IsVisible = true;
+			} else if (!int.TryParse(ReceptionsInDayEntry.Text, out int count)) {
+				ReceptionsInDayErrorMsg.Text = "Введите целое число";
+				ReceptionsInDayErrorMsg.IsVisible = true;
+			} else if (count < 1 || count > 12) {
+				ReceptionsInDayErrorMsg.Text = "Введите число от 1 до 12";
+				ReceptionsInDayErrorMsg.IsVisible = true;
+			} else {
+				UpdateTimesPickers(count);
+				ReceptionsInDayErrorMsg.Text = "";
+				ReceptionsInDayErrorMsg.IsVisible = false;
+			}
+		}
+
+		private void CheckMedicineValueEntry(object sender, EventArgs eventArgs)
+		{
+			if (string.IsNullOrEmpty(MedicineValueEntry.Text)) {
+				MedicineValueErrorMsg.Text = "Вы забыли ввести число";
+				MedicineValueErrorMsg.IsVisible = true;
+			} else if (!double.TryParse(MedicineValueEntry.Text, out double _)) {
+				MedicineValueErrorMsg.Text = "Введите целое или дробное число";
+				MedicineValueErrorMsg.IsVisible = true;
+			} else {
+				MedicineValueErrorMsg.Text = "";
+				MedicineValueErrorMsg.IsVisible = false;
+			}
 		}
 
 		private void CheckDaysCountEntry(object sender, EventArgs eventArgs)
