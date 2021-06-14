@@ -19,6 +19,9 @@ namespace MedicineSchedule.Services
 						Repeats = NotificationRepeat.No,
 						NotifyTime = course.StartDate + reception.Time,
 					},
+					Android = new AndroidOptions() {
+						Priority = NotificationPriority.High,
+					}
 				};
 
 				var time = notification.Schedule.NotifyTime;

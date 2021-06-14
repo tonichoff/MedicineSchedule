@@ -20,12 +20,16 @@ namespace MedicineSchedule
 
 		private void OnLocalNotificationReceived(NotificationReceivedEventArgs e)
 		{
-			MainPage.Navigation.PushModalAsync(new NotificationPage());
+			Device.BeginInvokeOnMainThread(() => {
+				MainPage.Navigation.PushModalAsync(new NotificationPage());
+			});
 		}
 
 		private void OnLocalNotificationTapped(NotificationTappedEventArgs e)
 		{
-			MainPage.Navigation.PushModalAsync(new NotificationPage());
+			Device.BeginInvokeOnMainThread(() => {
+				MainPage.Navigation.PushModalAsync(new NotificationPage());
+			});
 		}
 	}
 }
