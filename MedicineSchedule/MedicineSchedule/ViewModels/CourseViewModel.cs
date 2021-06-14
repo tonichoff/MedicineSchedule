@@ -365,45 +365,6 @@ namespace MedicineSchedule.ViewModels
 			if (Course != null) {
 				await dataBase.UpdateCourse(Course);
 			}
-			if (Receptions != null) {
-				int newCount = Course.ReceptionsInDayCount;
-				int oldCount = Receptions.Count;
-				if (newCount < oldCount) {
-					for (int i = newCount; i < oldCount; ++i) {
-						await dataBase.DeleteReception(Receptions[i]);
-						await Task.Run(() => NotificationManager.DeleteNotification(Receptions[i].Id));
-					}
-					Receptions.RemoveRange(newCount, oldCount - newCount);
-				} else if (newCount > oldCount) {
-					for (int i = oldCount; i < newCount; ++i) {
-						var reception = new Reception() {
-							CourseId = Course.Id,
-							Time = Times[i],
-						};
-						Receptions.Add(reception);
-						await Task.Run(() => {
-							var task = dataBase.CreateReception(reception);
-							task.Wait();
-							NotificationManager.CreateNotification(
-								reception.Id, NotificationManager.GetNextTime(reception, Course)
-							);
-						});
-					}
-				}
-				for (int i = 0; i < Math.Min(newCount, oldCount); ++i) {
-					if (Receptions[i].Time != Times[i]) {
-						Receptions[i].Time = Times[i];
-						await Task.Run(() => {
-							var updatingTask = dataBase.UpdateReception(Receptions[i]);
-							updatingTask.Wait();
-							NotificationManager.DeleteNotification(Receptions[i].Id);
-							NotificationManager.CreateNotification(
-								Receptions[i].Id, NotificationManager.GetNextTime(Receptions[i], Course)
-							);
-						});
-					}
-				}
-			}
 			await ParentPage.Navigation.PopModalAsync();
 		}
 
