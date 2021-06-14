@@ -76,5 +76,7 @@ namespace MedicineSchedule.Models
 		public int DaysCount { get; set; }
 		public int ReceptionsCount { get; set; }
 		public FoodRelation FoodRelation { get; set; }
+		public int ReceptionsWasTakenCount { get; set; }
+		public int DaysWasTakenCount { get; set; }
 	}
 }

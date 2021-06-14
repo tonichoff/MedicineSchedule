@@ -64,10 +64,6 @@ namespace MedicineSchedule.Services
 		public async void DeleteCourse(Course course)
 		{
 			await connection.DeleteAsync(course);
-			var receptions = connection.Table<Reception>().Where(r => r.CourseId == course.Id);
-			if (receptions != null) {
-				await connection.DeleteAsync(receptions);
-			}
 		}
 
 		public async void DeleteReception(Reception reception)
@@ -91,6 +87,63 @@ namespace MedicineSchedule.Services
 				);
 			}
 			return result;
+		}
+
+		public async Task<Course> GetCourseAtId(int id)
+		{
+			return await connection.GetAsync<Course>(id);
+		}
+
+		public async Task<List<Reception>> GetReceptionsByDate(DateTime date)
+		{
+			var courses = connection.Table<Course>().Where(c => c.StartDate <= date).ToListAsync();
+			var receptions = new List<Reception>();
+			foreach (var course in courses.Result) {
+				switch (course.ReceptionMode) {
+					case ReceptionMode.Regular:
+						receptions.AddRange(GetReceptionsHelper(course));
+						break;
+					case ReceptionMode.ReceptionCount:
+						if (course.ReceptionsWasTakenCount < course.ReceptionsCount) {
+							receptions.AddRange(GetReceptionsHelper(course));
+						}
+						break;
+					case ReceptionMode.DaysCount:
+						if (course.DaysWasTakenCount <= course.DaysCount) {
+							receptions.AddRange(GetReceptionsHelper(course));
+						}
+						break;
+				}
+			}
+			return receptions;
+
+			IEnumerable<Reception> GetReceptionsHelper(Course course)
+			{
+				bool validate = false;
+				switch (course.DaysMode) {
+					case DaysMode.EveryDay:
+						validate = true;
+						break;
+					case DaysMode.Interval:
+						int daysAgo = (int)(date - course.StartDate).TotalDays;
+						int interval = course.DaysInterval + 1;
+						validate = daysAgo % interval == 0;
+						break;
+				}
+				if (validate) {
+					var receptions = connection
+						.Table<Reception>()
+						.Where(r => r.CourseId == course.Id)
+						.ToListAsync()
+						.Result;
+					foreach (var reception in receptions) {
+						reception.CourseName = course.MedicineName;
+						reception.MedicineType = course.MedicineType;
+						yield return reception;
+					}
+				}
+				yield break;
+			}
 		}
 	}
 }

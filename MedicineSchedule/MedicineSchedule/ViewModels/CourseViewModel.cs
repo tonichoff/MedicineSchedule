@@ -350,6 +350,9 @@ namespace MedicineSchedule.ViewModels
 				bool userIsSure = await ParentPage.DisplayAlert("Вы уверены?", "Вернуть курс будет нельзя", "Да", "Нет");
 				if (userIsSure) {
 					dataBase.DeleteCourse(Course);
+					foreach (var reception in Receptions) {
+						dataBase.DeleteReception(reception);
+					}
 					await ParentPage.Navigation.PopModalAsync();
 				}
 			}
