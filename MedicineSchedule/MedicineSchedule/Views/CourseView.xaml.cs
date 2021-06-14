@@ -50,11 +50,20 @@ namespace MedicineSchedule.Views
 				DaysModPicker.SelectedIndex = 0;
 			} else {
 				CreateBtn.IsVisible = false;
+				// Пока что запрещается пользователю менять эти значения, т.к. текущая система не позволяет
+				// нормально менять их и переделывать уведомления
+				ReceptionsInDayEntry.IsEnabled = false;
+				DatePicker.IsEnabled = false;
+				RecModPicker.IsEnabled = false;
+				DaysCountEntry.IsEnabled = false;
+				ReceptionsCountEntry.IsEnabled = false;
+				DaysModPicker.IsEnabled = false;
+				IntervalEntry.IsEnabled = false;
+				DaysSkipEntry.IsEnabled = false;
+				for (int i = 0; i < pickersCount; ++i) {
+					timePickers[i].IsEnabled = false;
+				}
 				pickersCount = ViewModel.Course.ReceptionsInDayCount;
-			}
-
-			for (int i = 0; i < pickersCount; ++i) {
-				timePickers[i].IsVisible = true;
 			}
 		}
 

@@ -48,7 +48,7 @@
                         <Label x:Name="MedicineValueErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
-                <Frame>
+                <Frame x:Name="ReceptionsFrame">
                     <StackLayout x:Name="ReceptionsFrameLayout">
                         <Label Text="Время приёма" FontSize="Medium"/>
                         <Label Text="Сколько раз в день" FontSize="Medium"/>
@@ -57,11 +57,11 @@
                         <Label x:Name="ReceptionsInDayErrorMsg" IsVisible="False" TextColor="Red" />
                     </StackLayout>
                 </Frame>
-                <Frame>
+                <Frame x:Name="ScheduleFrame">
                     <StackLayout>
                         <Label Text="Расписание"/>
                         <Label Text="Время начала приёма"/>
-                        <DatePicker Date="{Binding StartDate}"/>
+                        <DatePicker x:Name="DatePicker" Date="{Binding StartDate}"/>
                         <Label Text="Как принимаем?"/>
                         <Picker x:Name="RecModPicker" SelectedIndex="{Binding ReceptionMode}" FontSize="Medium" PropertyChanged="ReceptionModeChanged">
                             <Picker.Items>
