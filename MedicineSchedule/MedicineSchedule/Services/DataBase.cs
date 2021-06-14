@@ -96,54 +96,64 @@ namespace MedicineSchedule.Services
 
 		public async Task<List<Reception>> GetReceptionsByDate(DateTime date)
 		{
-			var courses = connection.Table<Course>().Where(c => c.StartDate <= date).ToListAsync();
+			var clearDate = date - date.TimeOfDay;
+			var courses = connection.Table<Course>().Where(c => c.StartDate <= clearDate).ToListAsync();
 			var receptions = new List<Reception>();
 			foreach (var course in courses.Result) {
-				switch (course.ReceptionMode) {
-					case ReceptionMode.Regular:
-						receptions.AddRange(GetReceptionsHelper(course));
-						break;
-					case ReceptionMode.ReceptionCount:
-						//if (course.ReceptionsWasTakenCount < course.ReceptionsCount) {
-						//	receptions.AddRange(GetReceptionsHelper(course));
-						//}
-						break;
-					case ReceptionMode.DaysCount:
-						//if (course.DaysWasTakenCount <= course.DaysCount) {
-						//	receptions.AddRange(GetReceptionsHelper(course));
-						//}
-						break;
-				}
-			}
-			return receptions;
-
-			IEnumerable<Reception> GetReceptionsHelper(Course course)
-			{
-				bool validate = false;
+				bool validationPassed = false;
+				int daysPassed = 0;
+				int receptionLeft = 0;
 				switch (course.DaysMode) {
 					case DaysMode.EveryDay:
-						validate = true;
+						validationPassed = true;
+						daysPassed = (int) Math.Round((clearDate - course.StartDate).TotalDays);
+						receptionLeft = course.ReceptionsCount - daysPassed * course.ReceptionsInDayCount;
 						break;
 					case DaysMode.Interval:
-						int daysAgo = (int)(date - course.StartDate).TotalDays;
-						int interval = course.DaysInterval + 1;
-						validate = daysAgo % interval == 0;
+						int daysAgo = (int)Math.Round((clearDate - course.StartDate).TotalDays);
+						int interval = course.DaysInterval + course.DaysSkip;
+						int remainder = daysAgo % interval;
+						if (remainder < course.DaysInterval) {
+							validationPassed = true;
+							daysPassed = (daysAgo / interval) * course.DaysInterval + remainder;
+							receptionLeft = course.ReceptionsCount - daysPassed * course.ReceptionsInDayCount;
+						}
 						break;
 				}
-				if (validate) {
-					var receptions = connection
+				if (!validationPassed) {
+					continue;
+				}
+				switch (course.ReceptionMode) {
+					case ReceptionMode.Regular:
+						validationPassed = true;
+						break;
+					case ReceptionMode.ReceptionCount:
+						validationPassed = receptionLeft > 0;
+						break;
+					case ReceptionMode.DaysCount:
+						validationPassed = daysPassed < course.DaysCount;
+						break;
+				}
+				if (validationPassed) {
+					var newReceptions = connection
 						.Table<Reception>()
 						.Where(r => r.CourseId == course.Id)
 						.ToListAsync()
 						.Result;
-					foreach (var reception in receptions) {
+
+					foreach (var reception in newReceptions) {
+						if (course.ReceptionMode == ReceptionMode.ReceptionCount) {
+							if (receptionLeft-- <= 0) {
+								break;
+							}
+						}
 						reception.CourseName = course.MedicineName;
 						reception.MedicineType = course.MedicineType;
-						yield return reception;
+						receptions.Add(reception);
 					}
 				}
-				yield break;
 			}
+			return receptions;
 		}
 	}
 }

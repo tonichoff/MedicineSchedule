@@ -273,9 +273,8 @@ namespace MedicineSchedule.ViewModels
 				daysInterval = Course.DaysInterval;
 				daysSkip = Course.DaysSkip;
 			} else {
-				startDate = DateTime.Now;
+				startDate = DateTime.Now - DateTime.Now.TimeOfDay;
 				daysCount = 1;
-				receptionsInDayCount = 1;
 				receptionsCount = 1;
 				daysInterval = 1;
 				daysSkip = 1;
