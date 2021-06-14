@@ -12,24 +12,21 @@ namespace MedicineSchedule
 		{
 			InitializeComponent();
 
-			NotificationCenter.Current.NotificationReceived += OnLocalNotificationReceived;
-			NotificationCenter.Current.NotificationTapped += OnLocalNotificationTapped;
+			NotificationCenter.Current.NotificationReceived += (eventArgs) => {
+				ShowNotificationPage(eventArgs.Request.NotificationId);
+			};
+			NotificationCenter.Current.NotificationTapped += (eventArgs) => {
+				ShowNotificationPage(eventArgs.Request.NotificationId);
+			};
 
 			MainPage = new MainPage();
-		}
 
-		private void OnLocalNotificationReceived(NotificationReceivedEventArgs e)
-		{
-			Device.BeginInvokeOnMainThread(() => {
-				MainPage.Navigation.PushModalAsync(new NotificationPage());
-			});
-		}
-
-		private void OnLocalNotificationTapped(NotificationTappedEventArgs e)
-		{
-			Device.BeginInvokeOnMainThread(() => {
-				MainPage.Navigation.PushModalAsync(new NotificationPage());
-			});
+			void ShowNotificationPage(int notificationId)
+			{
+				Device.BeginInvokeOnMainThread(() => {
+					MainPage.Navigation.PushModalAsync(new NotificationPage(notificationId));
+				});
+			}
 		}
 	}
 }

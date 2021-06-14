@@ -3,10 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MedicineSchedule.Pages.NotificationPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Время жрать таблетки!"
-                   VerticalOptions="CenterAndExpand" 
-                   HorizontalOptions="CenterAndExpand" />
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
+            <Label x:Name="EatLabel" Text="Съел таблетку?" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Button x:Name="EatButton" Text="Я Съелъ!" HorizontalOptions="Center"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

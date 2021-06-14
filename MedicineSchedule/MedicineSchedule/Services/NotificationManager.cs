@@ -23,9 +23,6 @@ namespace MedicineSchedule.Services
 						Priority = NotificationPriority.High,
 					}
 				};
-
-				var time = notification.Schedule.NotifyTime;
-
 				NotificationCenter.Current.Show(notification);
 			}
 		}

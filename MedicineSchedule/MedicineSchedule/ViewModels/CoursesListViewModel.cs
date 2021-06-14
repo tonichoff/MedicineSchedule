@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace MedicineSchedule.ViewModels
 		public Command LoadCoursesCommand { get; set; }
 		public Command CreateCourseCommand { get; set; }
 		public Command<Course> ShowCourseDetailsCommand { get; }
+		public Command DebugCommand { get; set; }
 
 		public INavigation Navigation { get; set; }
 
@@ -50,6 +52,7 @@ namespace MedicineSchedule.ViewModels
 			LoadCoursesCommand = new Command(async () => await ExecuteLoadCoursesCommand());
 			CreateCourseCommand = new Command(CreateCourse);
 			ShowCourseDetailsCommand = new Command<Course>(ShowCourseDetails);
+			DebugCommand = new Command(ShowNotificationPage);
 		}
 
 		public void OnAppearing()
@@ -102,6 +105,15 @@ namespace MedicineSchedule.ViewModels
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private void ShowNotificationPage()
+		{
+			try {
+				Navigation.PushModalAsync(new Pages.NotificationPage(0));
+			} catch (Exception exception) {
+				Debug.WriteLine(exception.Message);
+			}
 		}
 	}
 }

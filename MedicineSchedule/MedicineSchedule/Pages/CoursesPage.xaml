@@ -31,5 +31,6 @@
         </RefreshView>
 
         <Button Text="Создать" Command="{Binding CreateCourseCommand}" />
+        <Button Text="Debug" Command="{Binding DebugCommand}" />
     </StackLayout>
 </ContentPage>

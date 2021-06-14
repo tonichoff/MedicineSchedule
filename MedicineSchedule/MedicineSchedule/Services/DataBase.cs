@@ -94,6 +94,11 @@ namespace MedicineSchedule.Services
 			return await connection.GetAsync<Course>(id);
 		}
 
+		public async Task<Reception> GetReceptionAtId(int id)
+		{
+			return await connection.GetAsync<Reception>(id);
+		}
+
 		public async Task<List<Reception>> GetReceptionsByDate(DateTime date)
 		{
 			var clearDate = date - date.TimeOfDay;
