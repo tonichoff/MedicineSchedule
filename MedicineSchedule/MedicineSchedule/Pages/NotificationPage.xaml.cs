@@ -12,26 +12,26 @@ namespace MedicineSchedule.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class NotificationPage : ContentPage
 	{
-		private Reception reception;
+		private NextReceptionInfo receptionInfo;
 		private Course course;
 
 		private readonly DataBase dataBase = new DataBase();
 
-		public NotificationPage(int receptionId)
+		public NotificationPage(int infoId)
 		{
 			InitializeComponent();
-			SetDescriptionAsync(receptionId);
+			SetDescriptionAsync(infoId);
 		}
 
-		private async void SetDescriptionAsync(int receptionId)
+		private async void SetDescriptionAsync(int infoId)
 		{
-			await Task.Run(() => SetDescription(receptionId));
+			await Task.Run(() => SetDescription(infoId));
 		}
 
 		private void SetDescription(int receptionid)
 		{
-			reception = dataBase.GetReceptionAtId(receptionid).Result;
-			course =  dataBase.GetCourseAtId(reception.CourseId).Result;
+			receptionInfo = dataBase.GetNextReceptionAtId(receptionid).Result;
+			course =  dataBase.GetCourseAtId(receptionInfo.CourseId).Result;
 			string description;
 			string buttonText;
 			switch (course.MedicineType) {
@@ -84,10 +84,6 @@ namespace MedicineSchedule.Pages
 		{
 			Task.Run(async () => {
 				await Navigation.PopModalAsync();
-				var time = NotificationManager.GetNextTime(reception, course);
-				if (time != null) {
-					NotificationManager.CreateNotification(reception.Id, time);
-				}
 			});
 		}
 	}
