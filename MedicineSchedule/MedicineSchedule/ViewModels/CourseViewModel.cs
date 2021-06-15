@@ -355,7 +355,8 @@ namespace MedicineSchedule.ViewModels
 				await Task.Run(() => {
 					var info = new NextReceptionInfo() {
 						CourseId = Course.Id,
-						NextDateTime = Course.StartDate + Receptions[0].Time,
+						NextDate = Course.StartDate,
+						NextTime = Receptions[0].Time,
 						ReceptionsCount = 0,
 						InDayReceptionIndex = 0,
 						DaysCount = 0,

@@ -9,7 +9,8 @@ namespace MedicineSchedule.Models
 		[PrimaryKey, AutoIncrement, Column("Id")]
 		public int Id { get; set; }
 		public int CourseId { get; set; }
-		public DateTime NextDateTime { get; set; }
+		public DateTime NextDate { get; set; }
+		public TimeSpan NextTime { get; set; }
 		public int ReceptionsCount { get; set; }
 		public int InDayReceptionIndex { get; set; }
 		public int DaysCount { get; set; }

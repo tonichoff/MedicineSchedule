@@ -20,9 +20,9 @@ namespace MedicineSchedule.Services
 				Description = "Прими таблетки, а то получишь по жопе!",
 				Schedule = new NotificationRequestSchedule() {
 					Repeats = NotificationRepeat.TimeInterval,
-					NotifyTime = info.NextDateTime,
+					NotifyTime = info.NextDate + info.NextTime,
 					NotifyRepeatInterval = repeatInterval,
-					NotifyAutoCancelTime = info.NextDateTime + repeatInterval * repeatCount,
+					NotifyAutoCancelTime = info.NextDate + info.NextTime + repeatInterval * repeatCount,
 				},
 				Android = new AndroidOptions() {
 					Priority = NotificationPriority.High,

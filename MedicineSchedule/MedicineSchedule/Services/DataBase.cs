@@ -113,6 +113,11 @@ namespace MedicineSchedule.Services
 			return await connection.GetAsync<Reception>(id);
 		}
 
+		public async Task<List<Reception>> GetReceptionsAtCourseId(int courseId)
+		{
+			return await connection.Table<Reception>().Where(r => r.CourseId == courseId).ToListAsync();
+		}
+
 		public async Task<NextReceptionInfo> GetNextReceptionAtId(int id)
 		{
 			return await connection.GetAsync<NextReceptionInfo>(id);
@@ -164,12 +169,7 @@ namespace MedicineSchedule.Services
 						break;
 				}
 				if (validationPassed) {
-					var newReceptions = connection
-						.Table<Reception>()
-						.Where(r => r.CourseId == course.Id)
-						.ToListAsync()
-						.Result;
-
+					var newReceptions = GetReceptionsAtCourseId(course.Id).Result;
 					foreach (var reception in newReceptions) {
 						if (course.ReceptionMode == ReceptionMode.ReceptionCount) {
 							if (receptionLeft-- <= 0) {
