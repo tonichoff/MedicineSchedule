@@ -20,5 +20,11 @@ namespace MedicineSchedule.Pages
 
 			BindingContext = viewModel;
 		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			viewModel.LoadReceptionsCommand.Execute(null);
+		}
 	}
 }

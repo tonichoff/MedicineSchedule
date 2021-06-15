@@ -10,24 +10,24 @@
         <StackLayout>
             <DatePicker x:Name="DatePicker" Date="{Binding Date}"/>
             <RefreshView x:DataType="local:ReceptionsListViewModel" Command="{Binding LoadReceptionsCommand}" IsRefreshing="{Binding IsUpdating, Mode=TwoWay}">
-                <CollectionView x:Name="CoursesListView" ItemsSource="{Binding Receptions}" SelectionMode="None">
+                <CollectionView x:Name="ReceptionsListView" ItemsSource="{Binding Receptions}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame>
                                 <StackLayout Padding="10" x:DataType="model:Reception">
                                     <Label Text="{Binding Time, Mode=TwoWay}" 
-                                       LineBreakMode="NoWrap" 
-                                       Style="{DynamicResource ListItemTextStyle}" 
-                                       FontSize="16" />
+                                           LineBreakMode="NoWrap" 
+                                           Style="{DynamicResource ListItemTextStyle}" 
+                                           FontSize="16" />
                                     <Label Text="{Binding CourseName, Mode=TwoWay}"
-                                       LineBreakMode="NoWrap" 
-                                       Style="{DynamicResource ListItemTextStyle}" 
-                                       FontSize="16" />
+                                           LineBreakMode="NoWrap" 
+                                           Style="{DynamicResource ListItemTextStyle}" 
+                                           FontSize="16" />
                                     <StackLayout.GestureRecognizers>
                                         <TapGestureRecognizer 
-                                        NumberOfTapsRequired="1"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:CoursesListViewModel}}, Path=ShowCourseDetailsCommand}"		
-                                        CommandParameter="{Binding .}">
+                                            NumberOfTapsRequired="1"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:CoursesListViewModel}}, Path=ShowCourseDetailsCommand}"		
+                                            CommandParameter="{Binding .}">
                                         </TapGestureRecognizer>
                                     </StackLayout.GestureRecognizers>
                                 </StackLayout>
