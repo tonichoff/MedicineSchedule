@@ -5,7 +5,7 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
             <Label x:Name="EatLabel" Text="Съел таблетку?" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <Button x:Name="EatButton" Text="Я Съелъ!" HorizontalOptions="Center"/>
+            <Button x:Name="EatButton" Text="Я Съелъ!" HorizontalOptions="Center" Clicked="EatButtonClicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

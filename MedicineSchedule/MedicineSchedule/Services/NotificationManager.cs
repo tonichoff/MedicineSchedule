@@ -9,42 +9,30 @@ namespace MedicineSchedule.Services
 {
 	public static class NotificationManager
 	{
-		private static readonly TimeSpan RepeatInterval = new TimeSpan(0, 10, 0);
-		private static readonly int RepeatCount = 3;
+		private static readonly TimeSpan repeatInterval = new TimeSpan(0, 10, 0);
+		private static readonly int repeatCount = 3;
 
-		public static void CreateNotification(int id, DateTime? date)
+		public static void CreateNotification(NextReceptionInfo info)
 		{
-			NotificationCenter.Current.Show(GetNotificationRequest(id, date));
-		}
-
-		public static void DeleteNotification(int id)
-		{
-			NotificationCenter.Current.Cancel(id);
-		}
-
-		public static DateTime? GetNextTime(Reception reception, Course course)
-		{
-			return null;
-		}
-
-		private static NotificationRequest GetNotificationRequest(int id, DateTime? time)
-		{
-			var repeatInterval = RepeatInterval;
-			var cancelTime = time + RepeatInterval * RepeatCount;
-			return new NotificationRequest() {
-				NotificationId = id,
+			NotificationCenter.Current.Show(new NotificationRequest() {
+				NotificationId = info.Id,
 				Title = "Эй, дед!",
-				Description = "Прими таблетки!",
+				Description = "Прими таблетки, а то получишь по жопе!",
 				Schedule = new NotificationRequestSchedule() {
 					Repeats = NotificationRepeat.TimeInterval,
-					NotifyTime = time,
+					NotifyTime = info.NextDate + info.NextTime,
 					NotifyRepeatInterval = repeatInterval,
-					NotifyAutoCancelTime = cancelTime,
+					NotifyAutoCancelTime = info.NextDate + info.NextTime + repeatInterval * repeatCount,
 				},
 				Android = new AndroidOptions() {
 					Priority = NotificationPriority.High,
 				}
-			};
+			});
+		}
+
+		public static void DeleteNotification(NextReceptionInfo info)
+		{
+			NotificationCenter.Current.Cancel(info.Id);
 		}
 	}
 }

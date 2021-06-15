@@ -30,6 +30,7 @@ namespace MedicineSchedule.Services
 			if (!tablesChecked) {
 				await connection.CreateTableAsync<Course>();
 				await connection.CreateTableAsync<Reception>();
+				await connection.CreateTableAsync<NextReceptionInfo>();
 				tablesChecked = true;
 			}
 		}
@@ -51,6 +52,11 @@ namespace MedicineSchedule.Services
 			await connection.InsertAsync(reception);
 		}
 
+		public async Task CreateNextReceptionInfo(NextReceptionInfo info)
+		{
+			await connection.InsertAsync(info);
+		}
+
 		public async Task UpdateCourse(Course course)
 		{
 			await connection.UpdateAsync(course);
@@ -61,6 +67,11 @@ namespace MedicineSchedule.Services
 			await connection.UpdateAsync(reception);
 		}
 
+		public async Task UpdateNextReceptionInfo(NextReceptionInfo info)
+		{
+			await connection.UpdateAsync(info);
+		}
+
 		public async Task DeleteCourse(Course course)
 		{
 			await connection.DeleteAsync(course);
@@ -69,7 +80,12 @@ namespace MedicineSchedule.Services
 		public async Task DeleteReception(Reception reception)
 		{
 			await connection.DeleteAsync(reception);
-		} 
+		}
+
+		public async Task DeleteNextReceptionInfo(NextReceptionInfo info)
+		{
+			await connection.DeleteAsync(info);
+		}
 
 		public List<(Course, List<Reception>)> GetAllCoursesWithReceptions()
 		{
@@ -95,6 +111,21 @@ namespace MedicineSchedule.Services
 		public async Task<Reception> GetReceptionAtId(int id)
 		{
 			return await connection.GetAsync<Reception>(id);
+		}
+
+		public async Task<List<Reception>> GetReceptionsAtCourseId(int courseId)
+		{
+			return await connection.Table<Reception>().Where(r => r.CourseId == courseId).ToListAsync();
+		}
+
+		public async Task<NextReceptionInfo> GetNextReceptionAtId(int id)
+		{
+			return await connection.GetAsync<NextReceptionInfo>(id);
+		}
+
+		public async Task<NextReceptionInfo> GetNextReceptionInfoAtCourseId(int courseId)
+		{
+			return await connection.GetAsync<NextReceptionInfo>((info) => info.CourseId == courseId);
 		}
 
 		public List<Reception> GetReceptionsByDate(DateTime date)
@@ -138,12 +169,7 @@ namespace MedicineSchedule.Services
 						break;
 				}
 				if (validationPassed) {
-					var newReceptions = connection
-						.Table<Reception>()
-						.Where(r => r.CourseId == course.Id)
-						.ToListAsync()
-						.Result;
-
+					var newReceptions = GetReceptionsAtCourseId(course.Id).Result;
 					foreach (var reception in newReceptions) {
 						if (course.ReceptionMode == ReceptionMode.ReceptionCount) {
 							if (receptionLeft-- <= 0) {
